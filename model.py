@@ -1,23 +1,22 @@
 # Based on https://github.com/avalonstrel/GatedConvolution_pytorch/
+import logging
+import torch.nn as nn
 import torch
-
+import numpy as np
 from Generator import Generator
 
 
-class AVID(BaseModel):
+class AVID(nn.Module):
     def __init__(self, opts=[], nc_in=5, nc_out=3, d_s_args={}, d_t_args={}):
         super().__init__()
-        
+        self.logger = logging.getLogger(self.__class__.__name__)
 
-        ######################
-        # Convolution layers #
-        ######################
         self.generator = Generator(5, 3, 64)
 
         #################
         # Discriminator #
         #################
-
+        '''
         if 'spatial_discriminator' not in opts or opts['spatial_discriminator']:
             self.spatial_discriminator = SNTemporalPatchGANDiscriminator(
                 nc_in=5, conv_type='2d', **self.d_s_args
@@ -26,14 +25,13 @@ class AVID(BaseModel):
             self.temporal_discriminator = SNTemporalPatchGANDiscriminator(
                 nc_in=5, **self.d_t_args
             )
+        '''
 
-    def forward(self, imgs, masks, guidances=None, model='G'):
-        # imgs: [B, L, C=3, H, W]
-        # masks: [B, L, C=1, H, W]
-        # guidances: [B, L, C=1, H, W]
+    def forward(self, imgs, model='G'):
         if model == 'G':
-            masked_imgs = imgs * masks
-            output = self.generator(masked_imgs, masks, guidances)
+            output = self.generator(imgs)
+            return output
+        '''
         elif model == 'D_t':
             guidances = torch.full_like(masks, 0.) if guidances is None else guidances
             input_imgs = torch.cat([imgs, masks, guidances], dim=2)
@@ -49,5 +47,5 @@ class AVID(BaseModel):
             output = output.view(in_shape[0], in_shape[1], -1)
         else:
             raise ValueError(f'forwarding model should be "G", "D_t", or "D_s", but got {model}')
-
         return output
+        '''
