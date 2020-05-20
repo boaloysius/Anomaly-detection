@@ -12,7 +12,7 @@ class AVID(BaseModel):
         ######################
         # Convolution layers #
         ######################
-        self.generator = Generator(5, 3, 64, "sn")
+        self.generator = Generator(5, 3, 64)
 
         #################
         # Discriminator #
