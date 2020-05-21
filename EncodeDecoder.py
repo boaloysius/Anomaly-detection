@@ -1,4 +1,4 @@
-from blocks import VanillaConv, VanillaDeConv
+from blocks import NN3Dby2D, NN3Dby2DTSM, NN3Dby2DTSMDeconv
 
 class DownSampleModule(nn.Module):
     def __init__(self, nc_in, nf):
