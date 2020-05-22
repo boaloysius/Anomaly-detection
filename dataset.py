@@ -29,7 +29,7 @@ class Dataset(torch.utils.data.Dataset):
         if resize_size is not None:
             transform.append(transforms.Resize(resize_size, resize_mode))
         transform.append(transforms.ToTensor())
-        transform.append(transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]))
+        #transform.append(transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]))
         transform = transforms.Compose(transform)
         return transform
     
