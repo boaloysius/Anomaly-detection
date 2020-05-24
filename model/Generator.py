@@ -9,7 +9,7 @@ class Generator(nn.Module):
         self.upsample_module = UpSampleModule(nf * 4, nc_out, nf)
 
 
-    def forward(self, masked_imgs, masks, guidances=None):
+    def forward(self, inp, guidances=None):
         encoded_features = self.downsample_module(inp)
         c11 = self.upsample_module(encoded_features)
         return out
