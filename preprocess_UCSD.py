@@ -2,6 +2,7 @@ import os
 import glob
 import numpy as np
 from PIL import Image
+import sys
 
 def preprocess_video(dirs):
     for _dir in dirs[:5]:

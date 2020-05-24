@@ -31,7 +31,7 @@ class NN3Dby2DTSM(nn.Module):
         self.layer = nn.utils.spectral_norm(self.layer)
         self.activation = activation
 
-        from tsm_utils import LearnableTSM
+        from model.tsm_utils import LearnableTSM
         
         LGTSM_kargs = {
             "shift_ratio": 0.5,

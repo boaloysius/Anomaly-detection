@@ -134,8 +134,10 @@ def visualize_mask(real_img, heat, D_fake, alpha, zeta):
 
 def view_img(img, idx=1, save_path=None):
     import torchvision.transforms as transforms
-    print(type(img))
-    plt.imshow(np.transpose(img,(1,2,0)))
+    if(img.shape[2]!=3):
+      plt.imshow(np.transpose(img,(1,2,0)))
+    else:
+      plt.imshow(img)
     #plt.imshow(transforms.ToPILImage()(img.cpu()), cmap='gray')
     #sns.heatmap(img[0].data.cpu().numpy(), cmap='gray', square=True, cbar=False)
     plt.show()

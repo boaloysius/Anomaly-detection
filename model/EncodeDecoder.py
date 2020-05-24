@@ -5,15 +5,15 @@ class DownSampleModule(nn.Module):
     def __init__(self, nc_in, nf):
         super().__init__()
 
-        self.conv1 = self.NN3Dby2D(nc_in, nf * 1, kernel_size=(5, 5), stride=1,padding=1)
+        self.conv1 = NN3Dby2D(nc_in, nf * 1, kernel_size=(5, 5), stride=1,padding=1)
 
         # Downsample 1
-        self.conv2 = self.NN3Dby2DTSM(nf * 1, nf * 2, kernel_size=(4, 4), stride=(2, 2), padding=(2, 2))
-        self.conv3 = self.NN3Dby2DTSM(nf * 2, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv2 = NN3Dby2DTSM(nf * 1, nf * 2, kernel_size=(4, 4), stride=(2, 2), padding=(2, 2))
+        self.conv3 = NN3Dby2DTSM(nf * 2, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
         
         # Downsample 2
-        self.conv4 = self.NN3Dby2DTSM(nf * 2, nf * 4, kernel_size=(4, 4), stride=(2, 2), padding=1)
-        self.conv5 = self.NN3Dby2DTSM(nf * 4, nf * 4, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv4 = NN3Dby2DTSM(nf * 2, nf * 4, kernel_size=(4, 4), stride=(2, 2), padding=1)
+        self.conv5 = NN3Dby2DTSM(nf * 4, nf * 4, kernel_size=(3, 3), stride=(1, 1), padding=1)
 
 
     def forward(self, inp):
@@ -29,12 +29,12 @@ class UpSampleModule(nn.Module):
     def __init__(self, nc_in, nc_out, nf):
         super().__init__()
         # Upsample 1
-        self.deconv1 = self.NN3Dby2DTSMDeconv(nc_in, nf * 2, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv9   = self.NN3Dby2DTSMDeconv(nf * 2, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.deconv1 = NN3Dby2DTSMDeconv(nc_in, nf * 2, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv9   = NN3Dby2DTSMDeconv(nf * 2, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 2
-        self.deconv2 = self.NN3Dby2DTSMDeconv(nf * 2, nf * 1, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv10 = self.NN3Dby2DTSMDeconv(nf * 1, nf // 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
-        self.conv11 = self.NN3Dby2DTSMDeconv(nf // 2, nc_out, kernel_size=(3, 3), stride=(1, 1), activation=None)
+        self.deconv2 = NN3Dby2DTSMDeconv(nf * 2, nf * 1, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv10 = NN3Dby2DTSMDeconv(nf * 1, nf // 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv11 = NN3Dby2DTSMDeconv(nf // 2, nc_out, kernel_size=(3, 3), stride=(1, 1), activation=None)
 
 
     def forward(self, inp):
