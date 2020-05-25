@@ -12,4 +12,4 @@ class Generator(nn.Module):
     def forward(self, inp, guidances=None):
         encoded_features = self.downsample_module(inp)
         c11 = self.upsample_module(encoded_features)
-        return out
+        return c11

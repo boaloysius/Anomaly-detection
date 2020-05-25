@@ -18,7 +18,7 @@ class NN3Dby2D(nn.Module):
         xs = torch.stack([self.layer(x) for x in xs], dim=2)
 
         if self.activation:
-            out = self.activation(out)
+            xs = self.activation(xs)
 
         return xs
 
