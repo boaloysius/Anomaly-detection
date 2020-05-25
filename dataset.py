@@ -56,12 +56,17 @@ class ToTorchFormatTensor(object):
         self.div = div
 
     def __call__(self, pic):
-        # handle PIL Image
-        img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
-        img = img.view(pic.size[1], pic.size[0], len(pic.mode))
-        # put it from HWC to CHW format
-        # yikes, this transpose takes 80% of the loading time/CPU
-        img = img.transpose(0, 1).transpose(0, 2).contiguous()
+        if isinstance(pic, np.ndarray):
+            # handle numpy array
+            img = torch.from_numpy(pic).permute(2, 3, 0, 1).contiguous()
+            # img: [L, C, H, W]
+        else:
+            # handle PIL Image
+            img = torch.ByteTensor(torch.ByteStorage.from_buffer(pic.tobytes()))
+            img = img.view(pic.size[1], pic.size[0], len(pic.mode))
+            # put it from HWC to CHW format
+            # yikes, this transpose takes 80% of the loading time/CPU
+            img = img.transpose(0, 1).transpose(0, 2).contiguous()
         return img.float().div(255) if self.div else img.float()
 
 class Stack(object):
