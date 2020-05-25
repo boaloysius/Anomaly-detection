@@ -13,7 +13,6 @@ class NN3Dby2D(nn.Module):
         self.activation = activation
 
     def forward(self, xs):
-        print(xs.shape)
         xs = torch.unbind(xs, dim=2)
         xs = torch.stack([self.layer(x) for x in xs], dim=2)
 
