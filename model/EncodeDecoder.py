@@ -34,19 +34,20 @@ class DownSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def forward(self, inp):
-        c1 = self.conv1(inp)
-        c2 = self.conv2(c1)
-        c3 = self.conv3(self.interpolate(c2,1/2))
-        c4 = self.conv4(c3)
-        c5 = self.conv5(self.interpolate(c4,1/2))
-        c6 = self.conv6(c5)
-        c7 = self.conv7(self.interpolate(c6,1/2))
-        c8 = self.conv8(c7)
-        c9 = self.conv9(self.interpolate(c8,1/2))
-        c10 = self.conv10(c9)
-        c11 = self.conv11(self.interpolate(c10,1/2))
-        c12 = self.conv12(c11)
-        return c12
+        out = inp
+        out = self.conv1(out)
+        out = self.conv2(out)
+        out = self.conv3(self.interpolate(out,1/2))
+        out = self.conv4(out)
+        out = self.conv5(self.interpolate(out,1/2))
+        out = self.conv6(out)
+        out = self.conv7(self.interpolate(out,1/2))
+        out = self.conv8(out)
+        out = self.conv9(self.interpolate(out,1/2))
+        out = self.conv10(out)
+        out = self.conv11(self.interpolate(out,1/2))
+        out = self.conv12(out)
+        return out
 
 
 class UpSampleModule(nn.Module):
@@ -75,16 +76,17 @@ class UpSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def forward(self, inp):
-        d1 = self.conv1(self.interpolate(inp,2))
-        d2 = self.conv2(d1)
-        d3 = self.conv3(self.interpolate(d2,2))
-        d4 = self.conv4(d3)
-        d5 = self.conv5(self.interpolate(d4,2))
-        d6 = self.conv6(d5)
-        d7 = self.conv7(self.interpolate(d6,2))
-        d8 = self.conv8(d7)
-        d9 = self.conv9(self.interpolate(d8,2))
-        d10 = self.conv10(d9)
-        d11 = self.conv11(d10)
-        d12 = self.conv12(d11)
-        return d12
+        out = inp
+        out = self.conv1(self.interpolate(out,2))
+        out = self.conv2(out)
+        out = self.conv3(self.interpolate(out,2))
+        out = self.conv4(out)
+        out = self.conv5(self.interpolate(out,2))
+        out = self.conv6(out)
+        out = self.conv7(self.interpolate(out,2))
+        out = self.conv8(out)
+        out = self.conv9(self.interpolate(out,2))
+        out = self.conv10(out)
+        out = self.conv11(out)
+        out = self.conv12(out)
+        return out
