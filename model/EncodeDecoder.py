@@ -22,7 +22,7 @@ class DownSampleModule(nn.Module):
         c3 = self.conv3(c2)
         c4 = self.conv4(c3)
         c5 = self.conv5(c4)
-        return c8
+        return c5
 
 
 class UpSampleModule(nn.Module):
