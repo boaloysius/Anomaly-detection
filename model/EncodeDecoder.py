@@ -39,6 +39,7 @@ class DownSampleModule(nn.Module):
         out = self.conv2(out)
         out = self.conv3(self.interpolate(out,1/2))
         out = self.conv4(out)
+        '''
         out = self.conv5(self.interpolate(out,1/2))
         out = self.conv6(out)
         out = self.conv7(self.interpolate(out,1/2))
@@ -47,6 +48,7 @@ class DownSampleModule(nn.Module):
         out = self.conv10(out)
         out = self.conv11(self.interpolate(out,1/2))
         out = self.conv12(out)
+        '''
         return out
 
 
@@ -77,6 +79,7 @@ class UpSampleModule(nn.Module):
 
     def forward(self, inp):
         out = inp
+        '''
         out = self.conv1(self.interpolate(out,2))
         out = self.conv2(out)
         out = self.conv3(self.interpolate(out,2))
@@ -85,6 +88,7 @@ class UpSampleModule(nn.Module):
         out = self.conv6(out)
         out = self.conv7(self.interpolate(out,2))
         out = self.conv8(out)
+        '''
         out = self.conv9(self.interpolate(out,2))
         out = self.conv10(out)
         out = self.conv11(out)
