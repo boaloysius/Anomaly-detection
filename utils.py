@@ -80,14 +80,7 @@ def draw_heatmap(ax, x, title='', cmap='gray'):
     ax.set_title(title)
     
     
-def visualize(real_img, gt_img, x_real, x_fake, D_fake, heat,
-              alphas=[0.1, 0.2, 0.3, 0.4], zetas=[0.3, 0.4, 0.5, 0.6],
-              save_path=None):
-
-    assert 1 <= len(alphas) <= 4
-    assert 1 <= len(zetas) <= 4
-
-    _D_fake = D_fake[0,0].data.cpu().numpy()
+def visualize(real_img, gt_img, x_real, x_fake, save_path=None):
     
     plt.figure(figsize=(20,15))
 
@@ -95,10 +88,22 @@ def visualize(real_img, gt_img, x_real, x_fake, D_fake, heat,
     ax = plt.subplot(3, 4, 1)
     draw_real_gt(ax, real_img, gt_img)
 
+    #real
+    ax = plt.subplot(3, 4, 2)
+    x_real=np.transpose(x_real,(1,2,0))
+    ax.imshow(x_real)
+
+    #fake
+    ax = plt.subplot(3, 4, 3)
+    x_fake = np.transpose(x_fake,(1,2,0))
+    ax.imshow(x_fake)
+
+    plt.show()
+    return
     # fake
     ax = plt.subplot(3, 4, 2)
     draw_fake(ax, x_fake)
-        
+
     # D_fake
     ax = plt.subplot(3, 4, 3)
     draw_heatmap(ax, _D_fake, 'D_fake')
@@ -122,22 +127,16 @@ def visualize(real_img, gt_img, x_real, x_fake, D_fake, heat,
     else:
         plt.savefig(save_path)
 
-        
-def visualize_mask(real_img, heat, D_fake, alpha, zeta):
-    #resized_heat = heat.resize(real_img.size)
-    resized_D_fake = np.array(convert_tensor_to_PIL(D_fake[0].cpu()).resize(heat.shape))/255
-    mask = (heat > alpha) * (resized_D_fake < zeta)
-    mask = Image.fromarray(np.stack([mask]*3, axis=-1).astype(np.uint8)*255).resize(real_img.size)
-    plt.imshow(real_img, cmap='gray')
-    plt.imshow(mask, alpha=0.5, cmap='gray')    
-    plt.show()
 
 def view_img(img, idx=1, save_path=None):
     import torchvision.transforms as transforms
-    if(img.shape[2]!=3):
+    if(type(img) not in [torch.Tensor,np.ndarray]):
+      plt.imshow(img)
+      return
+    elif(img.shape[2]!=3):
+      # To view using imshow. The image should be (x,y,3) shape. 
+      # Tensor output by model will be (3,x,y).
       plt.imshow(np.transpose(img,(1,2,0)))
     else:
       plt.imshow(img)
-    #plt.imshow(transforms.ToPILImage()(img.cpu()), cmap='gray')
-    #sns.heatmap(img[0].data.cpu().numpy(), cmap='gray', square=True, cbar=False)
     plt.show()

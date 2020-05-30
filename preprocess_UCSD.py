@@ -5,7 +5,7 @@ from PIL import Image
 import sys
 
 def preprocess_video(dirs):
-    for _dir in dirs[:5]:
+    for _dir in dirs:
         if os.path.isfile(_dir):
             continue
         if _dir[-3:] == '_gt':
