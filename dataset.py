@@ -4,18 +4,41 @@ import torchvision
 from PIL import Image
 import sys
 import numpy as np
+import glob
+import bisect
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, paths, resize_size=None, resize_mode=Image.BILINEAR, rgb=False):
+    def __init__(self, path, resize_size=None, resize_mode=Image.BILINEAR, rgb=False, set_length=5):
         super(torch.utils.data.Dataset, self).__init__()
-        self.paths = paths
+        self.path = path
+        
+        videos = sorted(glob.glob(path+"/*"))
+        self.video_frameList = {video:sorted(glob.glob(video+"/*.png")) for video in videos}
+        self.video_setCount = {video: len(frames)-set_length + 1 for video, frames in self.video_frameList.items() if len(frames)-set_length + 1 > 0} 
+        self.videos = list(self.video_setCount.keys())
+        setCount = list(self.video_setCount.values())
+        self.cum_setCount = np.cumsum(setCount)
+        self.min_indices = np.concatenate(([0],self.cum_setCount[:-1]))
+
         self.transform = self._make_transforms(resize_size, resize_mode)
         self.rgb = rgb
+        self.set_length = set_length
+        self.total_setCount = sum(self.video_setCount.values())
+
+    def convert_index(self,index):
+        i=bisect.bisect(self.cum_setCount,index)
+        video = self.videos[i]
+        base_index = self.min_indices[i]
+        return(video, base_index)
         
-    def __getitem__(self, index):
+    def __getitem__(self, _index):
+        #print(_index, self.convert_index(_index))
+        video, base_index = self.convert_index(_index)
+        whole_video = self.video_frameList[video]
+        index = _index-base_index
         img_list = []
-        for i in range(index, index+5):
-          path = self.paths[i]
+        for i in range(index, index+self.set_length):
+          path = whole_video[i]
           img = Image.open(path)
           if self.rgb:
               img = img.convert('RGB')
@@ -27,7 +50,7 @@ class Dataset(torch.utils.data.Dataset):
         return X
         
     def __len__(self):
-        return len(self.paths) - 5
+        return self.total_setCount
     
     @staticmethod
     def _make_transforms(resize_size, resize_mode):
