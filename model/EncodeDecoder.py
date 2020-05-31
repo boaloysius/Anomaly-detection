@@ -1,4 +1,4 @@
-from model.blocks import NN3Dby2D, NN3Dby2DTSM, NN3Dby2DTSMDeconv
+from model.blocks import NN3Dby2D, NN3Dby2DTSM
 import torch.nn as nn
 import torch.nn.functional as F
 
