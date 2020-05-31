@@ -8,13 +8,13 @@ import glob
 import bisect
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, path, resize_size=None, resize_mode=Image.BILINEAR, rgb=False, set_length=5):
+    def __init__(self, path, resize_size=None, resize_mode=Image.BILINEAR, rgb=False, depth=5):
         super(torch.utils.data.Dataset, self).__init__()
         self.path = path
         
         videos = sorted(glob.glob(path+"/*"))
         self.video_frameList = {video:sorted(glob.glob(video+"/*.png")) for video in videos}
-        self.video_setCount = {video: len(frames)-set_length + 1 for video, frames in self.video_frameList.items() if len(frames)-set_length + 1 > 0} 
+        self.video_setCount = {video: int(len(frames)/depth) for video, frames in self.video_frameList.items() if int(len(frames)/depth) > 0} 
         self.videos = list(self.video_setCount.keys())
         setCount = list(self.video_setCount.values())
         self.cum_setCount = np.cumsum(setCount)
@@ -22,7 +22,7 @@ class Dataset(torch.utils.data.Dataset):
 
         self.transform = self._make_transforms(resize_size, resize_mode)
         self.rgb = rgb
-        self.set_length = set_length
+        self.depth = depth
         self.total_setCount = sum(self.video_setCount.values())
 
     def convert_index(self,index):
@@ -32,13 +32,14 @@ class Dataset(torch.utils.data.Dataset):
         return(video, base_index)
         
     def __getitem__(self, _index):
-        #print(_index, self.convert_index(_index))
         video, base_index = self.convert_index(_index)
         whole_video = self.video_frameList[video]
-        index = _index-base_index
+        index = (_index-base_index)*self.depth
+        #print(_index, base_index, index, index+self.depth, video)
         img_list = []
-        for i in range(index, index+self.set_length):
+        for i in range(index, index+self.depth):
           path = whole_video[i]
+          #print(path)
           img = Image.open(path)
           if self.rgb:
               img = img.convert('RGB')
