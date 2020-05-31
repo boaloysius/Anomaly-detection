@@ -80,7 +80,7 @@ def draw_heatmap(ax, x, title='', cmap='gray'):
     ax.set_title(title)
     
     
-def visualize(real_img, gt_img, x_real, x_fake, save_path=None):
+def visualize(real_img, gt_img, x_real, x_fake=None, D_real=None, save_path=None):
     
     plt.figure(figsize=(20,15))
 
@@ -88,15 +88,23 @@ def visualize(real_img, gt_img, x_real, x_fake, save_path=None):
     ax = plt.subplot(3, 4, 1)
     draw_real_gt(ax, real_img, gt_img)
 
-    #real
+    #x_real
     ax = plt.subplot(3, 4, 2)
     x_real=np.transpose(x_real,(1,2,0))
     ax.imshow(x_real)
 
-    #fake
-    ax = plt.subplot(3, 4, 3)
-    x_fake = np.transpose(x_fake,(1,2,0))
-    ax.imshow(x_fake)
+    #x_fake
+    if(x_fake is not None):
+      ax = plt.subplot(3, 4, 3)
+      x_fake = np.transpose(x_fake,(1,2,0))
+      ax.imshow(x_fake)
+
+    #D_real
+    if(D_real is not None):
+      ax = plt.subplot(3, 4, 3)
+      D_real = D_real[0]#np.transpose(D_real,(1,2,0))
+      sns.heatmap(D_real, vmin=0, vmax=1,cmap='gray', square=True, cbar=False)
+      #ax.imshow(D_real)
 
     plt.show()
     return
