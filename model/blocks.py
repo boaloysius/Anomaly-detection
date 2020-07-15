@@ -13,9 +13,9 @@ class NN3Dby2D(nn.Module):
         self.activation = activation
 
     def forward(self, xs):
-        xs = torch.unbind(xs, dim=1) # [batch_size, channels, video_len, w, h]
+        xs = torch.unbind(xs, dim=2) # [B, C, L, H, W]
         # Unbind the video data to a tuple of frames
-        xs = torch.stack([self.layer(x) for x in xs], dim=1)
+        xs = torch.stack([self.layer(x) for x in xs], dim=2)
 
         if self.activation:
             xs = self.activation(xs)
