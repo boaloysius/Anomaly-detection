@@ -148,10 +148,14 @@ def view_img(imgs, title=None, save_path=None):
         axs[i].imshow(img)
       elif(len(img.shape)==3 and img.shape[2]!=3):
         # To view using imshow. The image should be (x,y,3) shape. 
-        # Tensor output by model will be (3,x,y).
-        axs[i].imshow(np.transpose(img,(1,2,0)))
+        # Tensor output by model will be (3,x,y)
+        axs[i].imshow(transforms.ToPILImage()(img.cpu()))
+        #axs[i].imshow(np.transpose(img,(1,2,0)))
       else:
         axs[i].imshow(img)
     if(title):
       fig.suptitle(title, fontsize=30, va="center")
     plt.show()
+
+def tanh2sigmoid(x):
+    return (x + 1) / 2 

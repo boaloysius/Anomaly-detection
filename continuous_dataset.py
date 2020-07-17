@@ -47,8 +47,6 @@ class Dataset(torch.utils.data.Dataset):
               img = img.convert('L')
           img_list.append(img)
 
-        print(len(img_list), np.array(img_list[0]).shape)
-
         X = self.transform(img_list)
         return X
         
@@ -60,7 +58,6 @@ class Dataset(torch.utils.data.Dataset):
         transform = []
         if resize_size is not None:
             transform.append(GroupScale(resize_size, resize_mode))
-        
         transform.append(Stack())
         transform.append(ToTorchFormatTensor())
         transform.append(GroupNormalize())
@@ -79,11 +76,8 @@ class GroupNormalize(object):
         self.worker = torchvision.transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
     
     def __call__(self, xs):
-        print(xs.shape)
         xs = torch.unbind(xs, dim=1)
-        print(len(xs, xs[0].shape))
         xs = torch.stack([self.worker(x) for x in xs], dim=1)
-        print(xs.shape)
         return xs
 
 
@@ -94,28 +88,12 @@ class ToTorchFormatTensor(object):
         self.div = div
 
     def __call__(self, pic):
-        if isinstance(pic, np.ndarray):
-            # handle numpy array
-            img = torch.from_numpy(pic).permute(3, 2, 0, 1).contiguous()
-            # img: [C, L, H, W]
-        return img.float()#.div(255) if self.div else img.float()
+        img = torch.from_numpy(pic).permute(3, 0, 1, 2).contiguous()
+        # img: [C, L, H, W]
+        return img.float().div(255) if self.div else img.float()
 
 class Stack(object):
-
-    def __init__(self, roll=False):
-        self.roll = roll
-
-    def __call__(self, img_group):
-        mode = img_group[0].mode
-        if mode == '1':
-            img_group = [img.convert('L') for img in img_group]
-            mode = 'L'
-        if mode == 'L':
-            return np.stack([np.expand_dims(x, 2) for x in img_group], axis=2)
-        elif mode == 'RGB':
-            if self.roll:
-                return np.stack([np.array(x)[:, :, ::-1] for x in img_group], axis=2)
-            else:
-                return np.stack(img_group, axis=2)
-        else:
-            raise NotImplementedError(f"Image mode {mode}")
+    def __init__(self):
+      pass
+    def __call__(self, pic):
+      return np.stack(pic)

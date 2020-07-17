@@ -78,10 +78,7 @@ class GroupNormalize(object):
     
     def __call__(self, xs):
         xs = torch.unbind(xs, dim=2)
-        print(xs[0])
         xs = torch.stack([self.worker(x) for x in xs], dim=2)
-        print("-------")
-        print(xs[0])
         return xs
 
 class ToTorchFormatTensor(object):
