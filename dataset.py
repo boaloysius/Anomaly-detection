@@ -58,10 +58,10 @@ class Dataset(torch.utils.data.Dataset):
         transform = []
         if resize_size is not None:
             transform.append(GroupScale(resize_size, resize_mode))
+
         transform.append(Stack())
         transform.append(ToTorchFormatTensor())
-        #transform.append(transforms.ToTensor())
-        #transform.append(transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]))
+        transform.append(GroupNormalize())
         transform = transforms.Compose(transform)
         return transform
 
@@ -72,6 +72,17 @@ class GroupScale(object):
     def __call__(self, img_group):
         return [self.worker(img) for img in img_group]
 
+class GroupNormalize(object):
+    def __init__(self):
+        self.worker = torchvision.transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
+    
+    def __call__(self, xs):
+        xs = torch.unbind(xs, dim=2)
+        print(xs[0])
+        xs = torch.stack([self.worker(x) for x in xs], dim=2)
+        print("-------")
+        print(xs[0])
+        return xs
 
 class ToTorchFormatTensor(object):
     """ Converts a PIL.Image (RGB) or numpy.ndarray (H x W x C) in the range [0, 255]
@@ -84,7 +95,7 @@ class ToTorchFormatTensor(object):
             # handle numpy array
             img = torch.from_numpy(pic).permute(3, 2, 0, 1).contiguous()
             # img: [C, L, H, W]
-        return img.float().div(255) if self.div else img.float()
+        return img.float()#.div(255) if self.div else img.float()
 
 class Stack(object):
 
