@@ -138,19 +138,21 @@ def visualize(real_img, gt_img, x_real, x_fake=None, D_real=None, save_path=None
         plt.savefig(save_path)
 
 
-def view_img(imgs, title=None, save_path=None):
+def view_img(imgs, title=None, save_path=None, heat_index=[]):
     import torchvision.transforms as transforms
+    import seaborn as sns
 
     fig, axs = plt.subplots(1, len(imgs))
     fig.set_size_inches(10, 10)
     for i, img in enumerate(imgs):
-      if(type(img) not in [torch.Tensor,np.ndarray]):
+      if(i in heat_index):
+        sns.heatmap(img, vmin=0, vmax=1, cmap='gray', square=True, cbar=False)
+      elif(type(img) not in [torch.Tensor,np.ndarray]):
         axs[i].imshow(img)
       elif(len(img.shape)==3 and img.shape[2]!=3):
         # To view using imshow. The image should be (x,y,3) shape. 
         # Tensor output by model will be (3,x,y)
         axs[i].imshow(transforms.ToPILImage()(img.cpu()))
-        #axs[i].imshow(np.transpose(img,(1,2,0)))
       else:
         axs[i].imshow(img)
     if(title):

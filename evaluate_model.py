@@ -34,9 +34,20 @@ def evaluate_temporal_discriminator(model, video_name, kind="Test", threshold=No
   loader = eval_loader()
 
   for index, x_real in enumerate(loader):
-    frame_index = int(x_real.shape[2]/2)
-    pred = model(x_real.to(device))[0][0][frame_index]
-    anomaly_count = (pred < threshold).sum()
-    title = "{} : {} ".format(index, anomaly_count)
-    print(title)
-    view_img([torch.unbind(x_real, dim=2)[frame_index][0], pred.detach().to("cpu").numpy() < threshold])
+    num_frames = x_real.shape[2]
+    pred = model(x_real.to(device))
+    x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
+    #x_real_frames = [x.numpy() for x in x_real_frames]
+    pred_frames = pred.detach().to("cpu").unbind(dim=2)
+    #pred_frames = [f.numpy() for f in pred_frames]
+
+    for i in range(num_frames):
+      anomaly_count = (pred_frames[i] < threshold).sum()
+      title = "{} : {} ".format(index*num_frames+i, anomaly_count)
+      print(title)
+      #view_img([tanh2sigmoid(x_real_frames[i][0]), pred_frames[i][0][0]], heat_index=[1])
+      print(i)
+
+
+
+
