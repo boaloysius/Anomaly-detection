@@ -45,9 +45,33 @@ def evaluate_temporal_discriminator(model, video_name, kind="Test", threshold=No
       anomaly_count = (pred_frames[i] < threshold).sum()
       title = "{} : {} ".format(index*num_frames+i, anomaly_count)
       print(title)
-      #view_img([tanh2sigmoid(x_real_frames[i][0]), pred_frames[i][0][0]], heat_index=[1])
+      view_img([tanh2sigmoid(x_real_frames[i][0]), pred_frames[i][0][0]], heat_index=[1])
       #print(i)
 
+def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
+  if(threshold==None):
+    threshold=0.999
+  eval_copy(video_name, kind)
+  loader = eval_loader()
 
+  for index, x_real in enumerate(loader):
+    num_frames = x_real.shape[2]
+    x_real = x_real.to(device)
+    x_fake = G.eval()(x_real)
+    y_pred = D.eval()(x_real)
+    x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
+    x_fake_frames = x_fake.detach().to("cpu").unbind(dim=2)
+    pred_frames = y_pred.detach().to("cpu").unbind(dim=2)
+
+    for i in range(num_frames):
+      anomaly_count = (pred_frames[i] < threshold).sum()
+      title = "{} : {} ".format(index*num_frames+i, anomaly_count)
+      print(title)
+      view_img([
+                  tanh2sigmoid(x_real_frames[i][0]),
+                  tanh2sigmoid(x_fake_frames[i][0]),  
+                  pred_frames[i][0][0]
+                  ], heat_index=[2])
+      
 
 
