@@ -2,7 +2,7 @@ import shutil
 import os
 
 from utils import *
-import continuous_dataset
+import dataset1
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -22,7 +22,7 @@ def eval_loader():
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
   size = 224
   depth=10
-  dataset = continuous_dataset.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
+  dataset = dataset1.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
   loader = torch.utils.data.DataLoader(
       dataset, batch_size=1, shuffle=False, num_workers=1)
   return loader
@@ -46,7 +46,7 @@ def evaluate_temporal_discriminator(model, video_name, kind="Test", threshold=No
       title = "{} : {} ".format(index*num_frames+i, anomaly_count)
       print(title)
       #view_img([tanh2sigmoid(x_real_frames[i][0]), pred_frames[i][0][0]], heat_index=[1])
-      print(i)
+      #print(i)
 
 
 
