@@ -1,5 +1,5 @@
-#from model.EncodeDecoder import DownSampleModule, UpSampleModule
-from model.EncodeDecoder_3D import DownSampleModule, UpSampleModule
+from model.EncodeDecoder import DownSampleModule, UpSampleModule
+#from model.EncodeDecoder_3D import DownSampleModule, UpSampleModule
 import torch.nn as nn
 
 class Generator(nn.Module):

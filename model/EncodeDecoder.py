@@ -10,8 +10,6 @@ class DownSampleModule(nn.Module):
         self.conv1 = NN3Dby2D(nc_in, nf * 1, kernel_size=(3, 3), stride=1,padding=1)
         self.conv2 = NN3Dby2D(nf * 1, nf * 1, kernel_size=(3, 3), stride=1,padding=1)
 
-        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
-
         # Downsample 64-128
         self.conv3 = NN3Dby2DTSM(nf * 1, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
         self.conv4 = NN3Dby2DTSM(nf * 2, nf * 2, kernel_size=(3, 3), stride=(1, 1), padding=1)
