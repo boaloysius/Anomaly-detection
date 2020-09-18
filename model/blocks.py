@@ -5,21 +5,26 @@ import torch.nn.functional as F
 
 class NN3Dby2D(nn.Module):
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=True)):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=True), bn=True):
         super().__init__()
 
         self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
         #self.layer = nn.utils.spectral_norm(self.layer)
-        self.bn = nn.BatchNorm2d(out_channels, affine=False)
-        self.activation = activation
+        
+        self.bn = nn.BatchNorm2d(out_channels, affine=True) if bn else False        
+        self.activation = activation if activation else False
 
     def forward(self, xs):
         xs = torch.unbind(xs, dim=2) # [B, C, L, H, W]
         # Unbind the video data to a tuple of frames
-        xs = torch.stack([self.bn(self.layer(x)) for x in xs], dim=2)
-
+        
+        if(self.bn):
+          xs = torch.stack([self.bn(self.layer(x)) for x in xs], dim=2)
+        else:
+          xs = torch.stack([self.layer(x) for x in xs], dim=2)
+        
         if self.activation:
-            xs = self.activation(xs)
+          xs = self.activation(xs)
 
         return xs
 

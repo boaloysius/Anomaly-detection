@@ -28,7 +28,7 @@ class TemporalDiscriminator(nn.Module):
         self.conv11 = NN3Dby2D(512, 1024, kernel_size=(1, 1))
         self.conv12 = NN3Dby2D(1024, 1024, kernel_size=(1, 1))
 
-        self.out_conv = NN3Dby2D(1024, 1, kernel_size=(1, 1), activation=None)
+        self.out_conv = NN3Dby2D(1024, 1, kernel_size=(1, 1), activation=None, bn=False)
         self.out = nn.Sigmoid()
 
     def forward(self, inp):
