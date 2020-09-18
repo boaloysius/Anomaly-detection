@@ -5,13 +5,14 @@ import torch.nn.functional as F
 
 class NN3Dby2D(nn.Module):
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=True), bn=True):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=False), bn=True, dropout=0.2):
         super().__init__()
 
         self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
         #self.layer = nn.utils.spectral_norm(self.layer)
         
-        self.bn = nn.BatchNorm2d(out_channels, affine=True) if bn else False        
+        self.dropout = nn.Dropout(dropout) if dropout else False
+        self.bn = nn.BatchNorm2d(out_channels, affine=False) if bn else False        
         self.activation = activation if activation else False
 
     def forward(self, xs):
@@ -25,6 +26,8 @@ class NN3Dby2D(nn.Module):
         
         if self.activation:
           xs = self.activation(xs)
+        if self.dropout:
+          xs = self.dropout(xs)
 
         return xs
 
