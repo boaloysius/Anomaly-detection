@@ -72,7 +72,7 @@ class UpSampleModule(nn.Module):
         self.conv10 = NN3Dby2D(nf*1, nf*1, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Output
         self.conv11 = NN3Dby2D(nf*1, nf*1, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv12 = NN3Dby2D(nf*1, nc_out, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv12 = NN3Dby2D(nf*1, nc_out, kernel_size=(3, 3), stride=(1, 1), padding=1, bn=False, activation=None, dropout=False)
 
     def interpolate(self, c, sf):
         return F.interpolate(c, scale_factor=(1, sf, sf))
