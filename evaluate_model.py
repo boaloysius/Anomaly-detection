@@ -77,8 +77,8 @@ def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
   for index, x_real in enumerate(loader):
     num_frames = x_real.shape[2]
     x_real = x_real.to(device)
-    x_fake = G.eval()(x_real)
-    y_pred = D.eval()(x_real)
+    x_fake = G(x_real)
+    y_pred = D(x_real)
     x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
     x_fake_frames = x_fake.detach().to("cpu").unbind(dim=2)
     pred_frames = y_pred.detach().to("cpu").unbind(dim=2)
