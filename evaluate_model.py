@@ -4,7 +4,7 @@ import os
 from utils import *
 import dataset1
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 'cpu'#'cuda' if torch.cuda.is_available() else 'cpu'
 
 def eval_copy(video_name, kind="Test"):
   train_dir = "../data/UCSD_processed/UCSDped1/Train/"
@@ -66,7 +66,7 @@ def evaluate_generator(model, video_name, kind="Test", threshold=None):
       anomaly_count = (pred_frames[i] < threshold).sum()
       title = "{} : {} ".format(index*num_frames+i, anomaly_count)
       print(title)
-      view_img([tanh2sigmoid(x_real_frames[i][0]), x_real_frames[i][0]-pred_frames[i][0][0]], heat_index=[1])
+      view_img([tanh2sigmoid(x_real_frames[i][0]), tanh2sigmoid(x_real_frames[i][0][0])])
 
 def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
   if(threshold==None):
