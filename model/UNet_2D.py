@@ -98,7 +98,7 @@ class UpSampleModule(nn.Module):
     def forward(self, inp, saved):
         out = inp
         #'''
-        out = self.conv1(self.concatsaved[-1] ,self.interpolate(out,2)))
+        out = self.conv1(self.concat(saved[-1] ,self.interpolate(out,2)))
         out = self.conv2(out)
         out = self.conv3(self.concat(saved[-2],self.interpolate(out,2)))
         out = self.conv4(out)
