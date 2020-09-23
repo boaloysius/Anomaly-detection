@@ -34,20 +34,20 @@ class DownSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def forward(self, inp):
-        out = inp
-        out = self.conv1(out)
-        out = self.conv2(out)
-        out = self.conv3(self.interpolate(out,1/2))
-        out = self.conv4(out)
+        out = [inp]
+        out.append(self.conv1(out[-1]))
+        out.append(self.conv2(out[-1]))
+        out.append(self.conv3(self.interpolate(out[-1],1/2)))
+        out.append(self.conv4(out[-1]))
         #'''
-        out = self.conv5(self.interpolate(out,1/2))
-        out = self.conv6(out)
-        out = self.conv7(self.interpolate(out,1/2))
-        out = self.conv8(out)
-        out = self.conv9(self.interpolate(out,1/2))
-        out = self.conv10(out)
-        out = self.conv11(self.interpolate(out,1/2))
-        out = self.conv12(out)
+        out.append(self.conv5(self.interpolate(out[-1],1/2)))
+        out.append(self.conv6(out[-1]))
+        out.append(self.conv7(self.interpolate(out[-1],1/2)))
+        out.append(self.conv8(out[-1]))
+        out.append(self.conv9(self.interpolate(out[-1],1/2)))
+        out.append(self.conv10(out[-1]))
+        out.append(self.conv11(self.interpolate(out[-1],1/2)))
+        out.append(self.conv12(out[-1]))
         #'''
         return out
 
