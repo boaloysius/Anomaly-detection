@@ -69,16 +69,16 @@ class UpSampleModule(nn.Module):
         super().__init__()
         # Upsample 2048-1024
         self.conv1 = NN3Dby2D(nf*32, nf*16, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv2 = NN3Dby2D(nf*16, nf*16, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv2 = NN3Dby2D(nf*16, nf*8, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 1024-512
         self.conv3 = NN3Dby2D(nf*16, nf*8, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv4 = NN3Dby2D(nf*8, nf*8, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv4 = NN3Dby2D(nf*8, nf*4, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 512-256
         self.conv5 = NN3Dby2D(nf*8, nf*4, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv6  = NN3Dby2D(nf*4, nf*4, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv6  = NN3Dby2D(nf*4, nf*2, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 256-128 
         self.conv7 = NN3Dby2D(nf*4, nf*2, kernel_size=(3, 3), stride=1, padding=1)
-        self.conv8 = NN3Dby2D(nf*2, nf*2, kernel_size=(3, 3), stride=(1, 1), padding=1)
+        self.conv8 = NN3Dby2D(nf*2, nf*1, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 128-64
         self.conv9 = NN3Dby2D(nf*2, nf*1, kernel_size=(3, 3), stride=1, padding=1)
         self.conv10 = NN3Dby2D(nf*1, nf*1, kernel_size=(3, 3), stride=(1, 1), padding=1)
