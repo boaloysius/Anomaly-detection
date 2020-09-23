@@ -1,6 +1,8 @@
 from model.blocks import NN3Dby2D, NN3Dby2DTSM
 import torch.nn as nn
 import torch.nn.functional as F
+import torch
+import sys
 
 class DownSampleModule(nn.Module):
     def __init__(self, nc_in, nf):
@@ -88,6 +90,8 @@ class UpSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def concat(self, x_down, x_up):
+      print(x_down.shape, x_up.shape)
+      sys.exit(0)
       x_up_split = torch.unbind(x_up, dim=2) # [B, C, L, H, W]
       x_down_split = torch.unbind(x_down, dim=2) # [B, C, L, H, W]
       #assert len(x_up_split) == len(x_down_split), "Carried and upsampled channels don't match"
