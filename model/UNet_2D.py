@@ -68,19 +68,19 @@ class UpSampleModule(nn.Module):
     def __init__(self, nc_out, nf):
         super().__init__()
         # Upsample 2048-1024
-        self.conv1 = NN3Dby2D(nf*32, nf*16, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv1 = NN3Dby2D(nf*48, nf*16, kernel_size=(3, 3), stride=1, padding=1)
         self.conv2 = NN3Dby2D(nf*16, nf*16, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 1024-512
-        self.conv3 = NN3Dby2D(nf*16, nf*8, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv3 = NN3Dby2D(nf*24, nf*8, kernel_size=(3, 3), stride=1, padding=1)
         self.conv4 = NN3Dby2D(nf*8, nf*8, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 512-256
-        self.conv5 = NN3Dby2D(nf*8, nf*4, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv5 = NN3Dby2D(nf*12, nf*4, kernel_size=(3, 3), stride=1, padding=1)
         self.conv6  = NN3Dby2D(nf*4, nf*4, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 256-128 
-        self.conv7 = NN3Dby2D(nf*4, nf*2, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv7 = NN3Dby2D(nf*6, nf*2, kernel_size=(3, 3), stride=1, padding=1)
         self.conv8 = NN3Dby2D(nf*2, nf*2, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 128-64
-        self.conv9 = NN3Dby2D(nf*2, nf*1, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv9 = NN3Dby2D(nf*3, nf*1, kernel_size=(3, 3), stride=1, padding=1)
         self.conv10 = NN3Dby2D(nf*1, nf*1, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Output
         self.conv11 = NN3Dby2D(nf*1, nf*1, kernel_size=(3, 3), stride=1, padding=1)
@@ -90,13 +90,12 @@ class UpSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def concat(self, x_down, x_up):
-      print(x_down.shape, x_up.shape)
-      sys.exit(0)
       x_up_split = torch.unbind(x_up, dim=2) # [B, C, L, H, W]
       x_down_split = torch.unbind(x_down, dim=2) # [B, C, L, H, W]
-      #assert len(x_up_split) == len(x_down_split), "Carried and upsampled channels don't match"
-      xs = [torch.cat([x_up_split[i], x_down[i]], dim=1) for i in range(len(x_up_split))]
-      xs = torch.stack([x for layer in xs], dim=2)
+
+      #print(x_up_split[0].shape, x_down_split[0].shape)
+      xs = [torch.cat([x_up_split[i], x_down_split[i]], dim=1) for i in range(len(x_up_split))]
+      xs = torch.stack([x for x in xs], dim=2)
       return xs
 
     def forward(self, inp):
