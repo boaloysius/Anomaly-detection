@@ -90,7 +90,7 @@ class UpSampleModule(nn.Module):
     def concat(self, x_down, x_up):
       x_up_split = torch.unbind(x_up, dim=2) # [B, C, L, H, W]
       x_down_split = torch.unbind(x_down, dim=2) # [B, C, L, H, W]
-      assert len(x_up_split) == len(x_down_split), "Carried and upsampled channels don't match"
+      #assert len(x_up_split) == len(x_down_split), "Carried and upsampled channels don't match"
       xs = [torch.cat([x_up_split[i], x_down[i]], dim=1) for i in range(len(x_up_split))]
       xs = torch.stack([x for layer in xs], dim=2)
       return xs
