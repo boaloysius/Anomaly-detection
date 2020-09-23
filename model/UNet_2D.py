@@ -88,22 +88,26 @@ class UpSampleModule(nn.Module):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
     def concat(self, x_down, x_up):
-
-      torch.cat([x_up, x_down], dim=1)
+      x_up_split = torch.unbind(x_up, dim=2) # [B, C, L, H, W]
+      x_down_split = torch.unbind(x_down, dim=2) # [B, C, L, H, W]
+      assert len(x_up_split) == len(x_down_split), "Carried and upsampled channels don't match"
+      xs = [torch.cat([x_up_split[i], x_down[i]], dim=1) for i in range(len(x_up_split))]
+      xs = torch.stack([x for layer in xs], dim=2)
+      return xs
 
     def forward(self, inp, saved):
         out = inp
         #'''
-        out = self.conv1(self.concat(saved[-1] ,self.interpolate(out,2)))
+        out = self.conv1(self.concatsaved[-1] ,self.interpolate(out,2)))
         out = self.conv2(out)
-        out = self.conv3(self.concat( pervious,self.interpolate(out,2)))
+        out = self.conv3(self.concat(saved[-2],self.interpolate(out,2)))
         out = self.conv4(out)
-        out = self.conv5(self.concat( pervious,self.interpolate(out,2)))
+        out = self.conv5(self.concat(saved[-3],self.interpolate(out,2)))
         out = self.conv6(out)
-        out = self.conv7(self.concat( pervious,self.interpolate(out,2)))
+        out = self.conv7(self.concat(saved[-4],self.interpolate(out,2)))
         out = self.conv8(out)
         #'''
-        out = self.conv9(self.concat( pervious,self.interpolate(out,2)))
+        out = self.conv9(self.concat(saved[-5],self.interpolate(out,2)))
         out = self.conv10(out)
         out = self.conv11(out)
         out = self.conv12(out)
