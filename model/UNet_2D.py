@@ -59,7 +59,7 @@ class DownSampleModule(nn.Module):
         out = self.conv11(self.interpolate(out,1/2))
         out = self.conv12(out)
         #'''
-        return out
+        return (out, saved)
 
 
 class UpSampleModule(nn.Module):
@@ -95,8 +95,9 @@ class UpSampleModule(nn.Module):
       xs = torch.stack([x for layer in xs], dim=2)
       return xs
 
-    def forward(self, inp, saved):
-        out = inp
+    def forward(self, inp):
+        out = inp[0]
+        saved = inp[1]
         #'''
         out = self.conv1(self.concat(saved[-1] ,self.interpolate(out,2)))
         out = self.conv2(out)
