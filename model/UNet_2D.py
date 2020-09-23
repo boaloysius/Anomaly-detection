@@ -68,7 +68,7 @@ class UpSampleModule(nn.Module):
     def __init__(self, nc_out, nf):
         super().__init__()
         # Upsample 2048-1024
-        self.conv1 = NN3Dby2D(nf*32, nf*16, kernel_size=(3, 3), stride=1, padding=1)
+        self.conv1 = NN3Dby2D(nf*48, nf*16, kernel_size=(3, 3), stride=1, padding=1)
         self.conv2 = NN3Dby2D(nf*16, nf*8, kernel_size=(3, 3), stride=(1, 1), padding=1)
         # Upsample 1024-512
         self.conv3 = NN3Dby2D(nf*16, nf*8, kernel_size=(3, 3), stride=1, padding=1)
