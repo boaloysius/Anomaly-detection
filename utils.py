@@ -48,8 +48,6 @@ def torch_log(x, eps=1e-12):
 def l2_BCE(y, t, eps=1e-12):
     return -(t*torch_log(y**2) + (1-t)*torch_log((1-y)**2)).mean()
 
-def l1_BCE(y, t, eps=1e-12):
-    return -(t*torch_log(y) + (1-t)*torch_log(1-y)).mean()
 
 def get_optimizer(optimizer, params, lr, momentum=0.9):
     if optimizer == 'Adam':
