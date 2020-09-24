@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 class NN3Dby2D(nn.Module):
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=False), bn=True, dropout=False):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.ReLU(), bn=True, dropout=False):
         super().__init__()
 
         self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
