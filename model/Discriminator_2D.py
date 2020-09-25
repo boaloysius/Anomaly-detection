@@ -95,7 +95,7 @@ class Discriminator_112_11(nn.Module):
         super().__init__()
 
         # (112, 112) => (56, 56)
-        self.conv2 = NN3Dby2D(64, 64, kernel_size=(1, 1))
+        self.conv2 = NN3Dby2D(3, 64, kernel_size=(1, 1))
         self.conv3 = NN3Dby2D(64, 64, kernel_size=(1, 1))
         self.conv4 = NN3Dby2D(64, 128, kernel_size=(3, 3), stride=2,padding=1)
         
