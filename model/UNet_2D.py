@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch
 import sys
 
-class DownSampleModule(nn.Module):
+class DownSampleModule_224(nn.Module):
     def __init__(self, nc_in, nf):
         super().__init__()
 
@@ -64,7 +64,7 @@ class DownSampleModule(nn.Module):
         return (out, saved)
 
 
-class UpSampleModule(nn.Module):
+class UpSampleModule_224(nn.Module):
     def __init__(self, nc_out, nf):
         super().__init__()
         # Upsample 2048-1024

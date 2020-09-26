@@ -1,12 +1,13 @@
-from model.UNet_2D import DownSampleModule_112, UpSampleModule_112
+from model.UNet_2D import DownSampleModule_224 as DownSampleModule
+from model.UNet_2D import UpSampleModule_224 as UpSampleModule
 import torch.nn as nn
 
 class Generator(nn.Module):
 
     def __init__(self, nc_in, nc_out, nf):
         super().__init__()
-        self.downsample_module = DownSampleModule_112(nc_in, nf)
-        self.upsample_module = UpSampleModule_112(nc_out, nf)
+        self.downsample_module = DownSampleModule(nc_in, nf)
+        self.upsample_module = UpSampleModule(nc_out, nf)
 
 
     def forward(self, inp, guidances=None):
