@@ -66,7 +66,11 @@ def evaluate_generator(model, video_name, kind="Test", threshold=None):
       anomaly_count = (pred_frames[i] < threshold).sum()
       title = "{} : {} ".format(index*num_frames+i, anomaly_count)
       print(title)
-      view_img([tanh2sigmoid(x_real_frames[i][0]), tanh2sigmoid(pred_frames[i][0])])
+      view_img([
+        tanh2sigmoid(x_real_frames[i][0]), 
+        tanh2sigmoid(pred_frames[i][0]), 
+        torch.abs(x_real_frames[i][0] - pred_frames[i][0])[0]
+        ], heat_index=[2])
 
 def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
   if(threshold==None):
