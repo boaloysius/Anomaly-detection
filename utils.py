@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from PIL import Image
-
+import shutil
+import os
+import sys
 
 def convert_tensor_to_PIL(tensor, out_size=None):
     out = transforms.ToPILImage()(tensor.cpu())
@@ -160,10 +162,20 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
 def tanh2sigmoid(x):
     return (x + 1) / 2 
 
-def store_model(mode, G=False,D=False):
+def store_model(mode, G=False,D=False, name=1):
+    name = str(name)
+    base_colab_model_path = "../model_outputs/"
+    base_gdrive_model_path = "../gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/"
+
+    colab_model_path = base_colab_model_path + name + "/"
+    gdrive_model_path = base_gdrive_model_path +name + "/"
+
+    shutil.rmtree(colab_model_path)
+    shutil.rmtree(gdrive_model_path)
+
     if("G" in mode):
-      torch.save(G.state_dict(), "../model_outputs/1/G.pth")
-      torch.save(G.state_dict(),"../gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/new_model/G.pt")
+      torch.save(G.state_dict(), colab_model_path+"G.pth")
+      torch.save(G.state_dict(), gdrive_model_path+"G.pt")
     if("D" in mode):
-      torch.save(D.state_dict(), "../model_outputs/1/D.pth")
-      torch.save(D.state_dict(),"../gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/new_model/D.pt")
+      torch.save(D.state_dict(), colab_model_path+"D.pth")
+      torch.save(D.state_dict(), gdrive_model_path+"D.pt")
