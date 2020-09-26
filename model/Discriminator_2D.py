@@ -2,7 +2,7 @@ from model.blocks import NN3Dby2D, NN3Dby2DTSM
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Discriminator(nn.Module):
+class Discriminator_224_11(nn.Module):
     def __init__(self, nc_in):
         super().__init__()
 
@@ -49,7 +49,7 @@ class Discriminator(nn.Module):
         out = self.out(out)
         return out
 
-class Discriminator_mini(nn.Module):
+class Discriminator_224_11_mini(nn.Module):
     def __init__(self, nc_in):
         super().__init__()
 
