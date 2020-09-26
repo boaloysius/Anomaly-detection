@@ -162,20 +162,25 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
 def tanh2sigmoid(x):
     return (x + 1) / 2 
 
-def store_model(mode, G=False,D=False, name=1):
-    name = str(name)
-    base_colab_model_path = "../model_outputs/"
-    base_gdrive_model_path = "../gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/"
+def store_model(G=False,D=False, folder_name=1):
+    folder_name = str(folder_name)
+    base_colab_model_path = "/content/model_outputs/"
+    base_gdrive_model_path = "/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/"
 
-    colab_model_path = base_colab_model_path + name + "/"
-    gdrive_model_path = base_gdrive_model_path +name + "/"
+    colab_model_path = base_colab_model_path + folder_name + "/"
+    gdrive_model_path = base_gdrive_model_path +folder_name + "/"
 
-    shutil.rmtree(colab_model_path)
-    shutil.rmtree(gdrive_model_path)
+    try:
+      shutil.rmtree(colab_model_path)
+      shutil.rmtree(gdrive_model_path)
+    except:
+      pass
+    os.mkdir(colab_model_path)
+    os.mkdir(gdrive_model_path)
 
-    if("G" in mode):
+    if(G):
       torch.save(G.state_dict(), colab_model_path+"G.pth")
       torch.save(G.state_dict(), gdrive_model_path+"G.pt")
-    if("D" in mode):
+    if(D):
       torch.save(D.state_dict(), colab_model_path+"D.pth")
       torch.save(D.state_dict(), gdrive_model_path+"D.pt")
