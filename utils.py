@@ -184,3 +184,30 @@ def store_model(G=False,D=False, folder_name=1):
     if(D):
       torch.save(D.state_dict(), colab_model_path+"D.pth")
       torch.save(D.state_dict(), gdrive_model_path+"D.pt")
+
+def epoch_print(x_real, x_noise, G=False,D=False):
+
+    print_queue=[
+              tanh2sigmoid(torch.unbind(x_real, dim=2)[0][0]), 
+              tanh2sigmoid(torch.unbind(x_noise, dim=2)[0][0]),   
+    ]
+
+    if(G):
+      print_queue+=[
+            tanh2sigmoid(torch.unbind(G(x_real).detach(), dim=2)[0][0]), 
+            tanh2sigmoid(torch.unbind(G(x_noise).detach(), dim=2)[0][0]),
+            torch.abs(torch.unbind(x_real-G(x_real), dim=2)[0][0]), 
+            torch.abs(torch.unbind(x_noise-G(x_noise), dim=2)[0][0]),
+      ]
+
+    if(D):
+      print_queue+=[
+            torch.unbind(D(x_real).detach(), dim=2)[0][0][0],
+            torch.unbind(D(x_noise).detach(), dim=2)[0][0][0]
+      ]
+    
+    while(print_queue):
+      print_length = min(4,len(print_queue))
+      view_img(print_queue[:print_length])
+      print_queue = print_queue[print_length:]
+
