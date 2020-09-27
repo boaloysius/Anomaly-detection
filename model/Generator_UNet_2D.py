@@ -1,5 +1,6 @@
 from model.UNet_2D import DownSampleModule_224 as DownSampleModule
-from model.UNet_2D import UpSampleModule_224 as UpSampleModule
+#from model.UNet_2D import UpSampleModule_224 as UpSampleModule
+from model.UNet_2D import UpSampleModule_224_from_second as UpSampleModule
 import torch.nn as nn
 
 class Generator(nn.Module):
