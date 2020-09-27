@@ -1,1 +1,2 @@
-lib/*
+libs/
+!libs/empty.txt
