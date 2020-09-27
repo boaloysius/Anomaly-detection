@@ -162,7 +162,7 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
 def tanh2sigmoid(x):
     return (x + 1) / 2 
 
-def store_model(G=False,D=False, folder_name=1, drive=False):
+def store_model(G=False,D=False, folder_name=1, drive=True):
     folder_name = str(folder_name)
     base_paths = ["/content/model_outputs/"]
     if(drive):
