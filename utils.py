@@ -162,28 +162,22 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
 def tanh2sigmoid(x):
     return (x + 1) / 2 
 
-def store_model(G=False,D=False, folder_name=1):
+def store_model(G=False,D=False, folder_name=1, drive=False):
     folder_name = str(folder_name)
-    base_colab_model_path = "/content/model_outputs/"
-    base_gdrive_model_path = "/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/"
-
-    colab_model_path = base_colab_model_path + folder_name + "/"
-    gdrive_model_path = base_gdrive_model_path +folder_name + "/"
-
-    try:
-      shutil.rmtree(colab_model_path)
-      shutil.rmtree(gdrive_model_path)
-    except:
-      pass
-    os.mkdir(colab_model_path)
-    os.mkdir(gdrive_model_path)
-
-    if(G):
-      torch.save(G.state_dict(), colab_model_path+"G.pth")
-      torch.save(G.state_dict(), gdrive_model_path+"G.pt")
-    if(D):
-      torch.save(D.state_dict(), colab_model_path+"D.pth")
-      torch.save(D.state_dict(), gdrive_model_path+"D.pt")
+    base_paths = ["/content/model_outputs/"]
+    if(drive=True):
+      base_paths.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/")
+    
+    for base_path in base_paths:
+      os.makedirs(base_path, exist_ok=True)
+      model_path = base_path + folder_name + "/"
+      try: shutil.rmtree(model_path)
+      except: pass
+      os.mkdir(model_path)
+      if(G):
+        torch.save(G.state_dict(), model_path+"G.pth")
+      if(D):
+        torch.save(D.state_dict(), model_path+"D.pth")
 
 def epoch_print(x_real, x_noise, G=False,D=False):
 
