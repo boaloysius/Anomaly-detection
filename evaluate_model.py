@@ -80,22 +80,21 @@ def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
 
   for index, x_real in enumerate(loader):
     num_frames = x_real.shape[2]
-    x_real = x_real.to(device)
-    x_fake = G(x_real)
-    y_pred = D(x_real)
+    pred_G = G(x_real.to(device))
+    pred_D = D(x_real.to(device))
     x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
-    x_fake_frames = x_fake.detach().to("cpu").unbind(dim=2)
-    pred_frames = y_pred.detach().to("cpu").unbind(dim=2)
+    pred_frames_G = pred_G.detach().to("cpu").unbind(dim=2)
+    pred_frames_D = pred_D.detach().to("cpu").unbind(dim=2)
 
     for i in range(num_frames):
-      anomaly_count = (pred_frames[i] < threshold).sum()
+      anomaly_count = (pred_frames_D[i] < threshold).sum()
       title = "{} : {} ".format(index*num_frames+i, anomaly_count)
       print(title)
       view_img([
-                  tanh2sigmoid(x_real_frames[i][0]),
-                  tanh2sigmoid(x_fake_frames[i][0]),  
-                  pred_frames[i][0][0]
-                  ], heat_index=[2])
-      
-
-
+        tanh2sigmoid(x_real_frames[i][0]), 
+        tanh2sigmoid(pred_frames_G[i][0]),
+        pred_frames_D[i][0][0],
+        torch.abs(x_real_frames[i][0] - pred_frames_G[i][0])[0],
+        ], heat_index=[3])
+      #break
+    #break
