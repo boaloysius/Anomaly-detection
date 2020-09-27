@@ -1,2 +1,3 @@
-libs/
+libs/*
 !libs/empty.txt
+__pycache__
