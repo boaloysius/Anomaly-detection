@@ -165,7 +165,7 @@ def tanh2sigmoid(x):
 def store_model(G=False,D=False, folder_name=1, drive=False):
     folder_name = str(folder_name)
     base_paths = ["/content/model_outputs/"]
-    if(drive=True):
+    if(drive):
       base_paths.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/")
     
     for base_path in base_paths:
