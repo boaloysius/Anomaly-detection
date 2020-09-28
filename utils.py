@@ -179,7 +179,7 @@ def store_model(G=False,D=False, folder_name=1, drive=True):
       if(D):
         torch.save(D.state_dict(), model_path+"D.pth")
 
-def epoch_print(x_real, x_noise, G=False,D=False):
+def denoising_epoch_print(x_real, x_noise, G=False,D=False):
 
     print_queue=[
               tanh2sigmoid(torch.unbind(x_real, dim=2)[0][0]), 
@@ -198,6 +198,28 @@ def epoch_print(x_real, x_noise, G=False,D=False):
       print_queue+=[
             torch.unbind(D(x_real).detach(), dim=2)[0][0][0],
             torch.unbind(D(x_noise).detach(), dim=2)[0][0][0]
+      ]
+    
+    while(print_queue):
+      print_length = min(4,len(print_queue))
+      view_img(print_queue[:print_length])
+      print_queue = print_queue[print_length:]
+
+def epoch_print(input_img, target,  G=False,D=False):
+
+    print_queue=[
+              tanh2sigmoid(torch.unbind(target, dim=2)[0][0])   
+    ]
+
+    if(G):
+      print_queue+=[
+            tanh2sigmoid(torch.unbind(G(input_img).detach(), dim=2)[0][0]), 
+            torch.abs(torch.unbind(target-G(input_img), dim=2)[0][0]), 
+      ]
+
+    if(D):
+      print_queue+=[
+            torch.unbind(D(input_img).detach(), dim=2)[0][0][0]
       ]
     
     while(print_queue):
