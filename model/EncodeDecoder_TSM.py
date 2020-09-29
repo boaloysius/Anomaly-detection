@@ -33,21 +33,41 @@ class DownSampleModule(nn.Module):
     def interpolate(self, c, sf):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
+    def residual_TSM(self, layer, x_in, residual=True):
+      x_conv = layer(x_in)
+      if(residual):
+        x_in_split   = torch.unbind(x_in, dim=2) # [B, C, L, H, W]
+        x_conv_split = torch.unbind(x_conv, dim=2) # [B, C, L, H, W]
+        xs = [torch.cat([x_in_split[i], x_conv_split[i]], dim=1) for i in range(len(x_in_split))]
+        xs = torch.stack([x for x in xs], dim=2)
+        return xs
+      else:
+        return x_conv
+
     def forward(self, inp):
         out = inp
         out = self.conv1(out)
         out = self.conv2(out)
-        out = self.conv3(self.interpolate(out,1/2))
-        out = self.conv4(out)
-        #'''
-        out = self.conv5(self.interpolate(out,1/2))
-        out = self.conv6(out)
-        out = self.conv7(self.interpolate(out,1/2))
-        out = self.conv8(out)
-        out = self.conv9(self.interpolate(out,1/2))
-        out = self.conv10(out)
-        out = self.conv11(self.interpolate(out,1/2))
-        out = self.conv12(out)
+        
+        out = self.interpolate(out,1/2)
+        out = self.residual_TSM(self.conv3, out, self.residual)
+        out = self.residual_TSM(self.conv4, out, self.residual)
+        
+        out = self.interpolate(out,1/2)
+        out = self.residual_TSM(self.conv5, out, self.residual)
+        out = self.residual_TSM(self.conv6, out, self.residual)
+        
+        out = self.interpolate(out,1/2)
+        out = self.residual_TSM(self.conv7, out, self.residual)
+        out = self.residual_TSM(self.conv8, out, self.residual)
+
+        out = self.interpolate(out,1/2)
+        out = self.residual_TSM(self.conv9, out, self.residual)
+        out = self.residual_TSM(self.conv10, out, self.residual)
+        
+        out = self.interpolate(out,1/2)
+        out = self.residual_TSM(self.conv11, out, self.residual)
+        out = self.residual_TSM(self.conv12, out, self.residual)
         #'''
         return out
 
@@ -77,20 +97,36 @@ class UpSampleModule(nn.Module):
     def interpolate(self, c, sf):
         return F.interpolate(c, scale_factor=(1, sf, sf))
 
+    def residual_TSM(self, layer, x_in, residual=True):
+      x_conv = layer(x_in)
+      if(residual):
+        x_in_split   = torch.unbind(x_in, dim=2) # [B, C, L, H, W]
+        x_conv_split = torch.unbind(x_conv, dim=2) # [B, C, L, H, W]
+        xs = [torch.cat([x_in_split[i], x_conv_split[i]], dim=1) for i in range(len(x_in_split))]
+        xs = torch.stack([x for x in xs], dim=2)
+        return xs
+      else:
+        return x_conv
+
     def forward(self, inp):
         out = inp
         #'''
-        out = self.conv1(self.interpolate(out,2))
-        out = self.conv2(out)
-        out = self.conv3(self.interpolate(out,2))
-        out = self.conv4(out)
-        out = self.conv5(self.interpolate(out,2))
-        out = self.conv6(out)
-        out = self.conv7(self.interpolate(out,2))
-        out = self.conv8(out)
-        #'''
-        out = self.conv9(self.interpolate(out,2))
-        out = self.conv10(out)
+        out = self.interpolate(out,2)
+        out = self.residual_TSM(self.conv1, out, self.residual)
+        out = self.residual_TSM(self.conv2, out, self.residual)
+
+        out = self.interpolate(out,2)
+        out = self.residual_TSM(self.conv3, out, self.residual)
+        out = self.residual_TSM(self.conv4, out, self.residual)
+        out = self.interpolate(out,2)
+        out = self.residual_TSM(self.conv5, out, self.residual)
+        out = self.residual_TSM(self.conv6, out, self.residual)
+        out = self.interpolate(out,2)
+        out = self.residual_TSM(self.conv7, out, self.residual)
+        out = self.residual_TSM(self.conv8, out, self.residual)
+        out = self.interpolate(out,2)
+        out = self.residual_TSM(self.conv9, out, self.residual)
+        out = self.residual_TSM(self.conv10, out, self.residual)
         out = self.conv11(out)
         out = self.conv12(out)
         return out
