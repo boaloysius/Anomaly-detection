@@ -143,7 +143,7 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
     import seaborn as sns
 
     fig, axs = plt.subplots(1, len(imgs))
-    fig.set_size_inches(10, 10)
+    fig.set_size_inches(20, 20)
     for i, img in enumerate(imgs):
       if(i in heat_index):
         sns.heatmap(img, vmin=0, vmax=1, cmap='gray', square=True, cbar=False)
