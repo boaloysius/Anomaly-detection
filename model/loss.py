@@ -13,8 +13,7 @@ canny_edge_net = CannyEdgeNet(threshold=2.0, use_cuda=True).to(device)
 canny_edge_net.eval()
 
 def get_edge(tensor):
-    with torch.no_grad():
-        blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold = \
+    blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold = \
             canny_edge_net(tensor)
     return thresholded
 
@@ -55,3 +54,14 @@ class EdgeLoss(nn.Module):
                 mean_image_loss.append(loss)
 
         return torch.stack(mean_image_loss, dim=0).mean(dim=0)
+
+
+import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
+
+def get_ssim_loss(x, target):
+  unbind1 = torch.unbind(x, dim=2)
+  unbind2 = torch.unbind(target, dim=2)
+  ssim_loss = pytorch_ssim.SSIM(window_size = 11)
+  mean_loss = [ssim_loss(img1, img2) for img1, img2 in zip(unbind1, unbind2)]
+  mean_loss_tensor = torch.stack(mean_loss, dim=0).mean(dim=0)
+  return(mean_loss_tensor)
