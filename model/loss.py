@@ -13,6 +13,7 @@ canny_edge_net = CannyEdgeNet(threshold=2.0, use_cuda=True).to(device)
 canny_edge_net.eval()
 
 def get_edge(tensor):
+
     blurred_img, grad_mag, grad_orientation, thin_edges, thresholded, early_threshold = \
             canny_edge_net(tensor)
     return thresholded
