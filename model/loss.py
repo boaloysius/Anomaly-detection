@@ -58,7 +58,7 @@ class EdgeLoss(nn.Module):
 
 import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 
-def get_ssim_loss(x, target):
+def ssim_loss(x, target):
   unbind1 = torch.unbind(x, dim=2)
   unbind2 = torch.unbind(target, dim=2)
   ssim_loss = pytorch_ssim.SSIM(window_size = 11)
