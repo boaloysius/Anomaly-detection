@@ -63,9 +63,9 @@ class DownSampleModule(nn.Module):
         out = self.conv9(out)
         out = self.residual_TSM(self.conv10, out)
         
-        #out = self.interpolate(out,1/2)
-        #out = self.conv11(out)
-        #out = self.residual_TSM(self.conv12, out)
+        out = self.interpolate(out,1/2)
+        out = self.conv11(out)
+        out = self.residual_TSM(self.conv12, out)
         #'''
         return out
 
@@ -108,9 +108,9 @@ class UpSampleModule(nn.Module):
     def forward(self, inp):
         out = inp
         #'''
-        #out = self.interpolate(out,2)
-        #out = self.conv1(out)
-        #out = self.residual_TSM(self.conv2, out)
+        out = self.interpolate(out,2)
+        out = self.conv1(out)
+        out = self.residual_TSM(self.conv2, out)
 
         out = self.interpolate(out,2)
         out = self.conv3(out)
