@@ -38,8 +38,8 @@ class EdgeLoss(nn.Module):
 
     def forward(self, data_input, model_output):
 
-        targets = torch.unbind(data_input, dim=2)
-        outputs = torch.unbind(model_output, dim=2)
+        targets = torch.unbind(tanh2sigmoid(data_input), dim=2)
+        outputs = torch.unbind(tanh2sigmoid(model_output), dim=2)
 
         mean_image_loss = []
         output_edges = []
@@ -60,8 +60,8 @@ class EdgeLoss(nn.Module):
 import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 
 def ssim_loss(x, target):
-  unbind1 = torch.unbind(x, dim=2)
-  unbind2 = torch.unbind(target, dim=2)
+  unbind1 = torch.unbind(tanh2sigmoid(x), dim=2)
+  unbind2 = torch.unbind(tanh2sigmoid(target), dim=2)
   ssim_loss = pytorch_ssim.SSIM(window_size = 11)
   mean_loss = [ssim_loss(img1, img2) for img1, img2 in zip(unbind1, unbind2)]
   mean_loss_tensor = torch.stack(mean_loss, dim=0).mean(dim=0)
