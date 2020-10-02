@@ -37,8 +37,9 @@ class EdgeLoss(nn.Module):
         return loss
 
     def forward(self, data_input, model_output):
-        targets = data_input
-        outputs = model_output
+
+        targets = torch.unbind(data_input, dim=2)
+        outputs = torch.unbind(model_output, dim=2)
 
         mean_image_loss = []
         output_edges = []
