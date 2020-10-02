@@ -24,13 +24,6 @@ class EdgeLoss(nn.Module):
         self.l1_loss = nn.L1Loss()
 
     def edge_loss(self, output, target):
-
-        #print(output.shape, target.shape)
-        #view_img([
-        #          tanh2sigmoid(output.to("cpu"))[0],
-        #          tanh2sigmoid(target.to("cpu"))[0]
-        #          ])
-
         output_edge = get_edge(output)
         gt_edge = get_edge(target)
         loss = self.l1_loss(output_edge, gt_edge)
@@ -38,21 +31,16 @@ class EdgeLoss(nn.Module):
 
     def forward(self, data_input, model_output):
 
-        targets = torch.unbind(tanh2sigmoid(data_input), dim=2)
-        outputs = torch.unbind(tanh2sigmoid(model_output), dim=2)
+        #BXL,C,W,H
+        data_input = data_input.permute(0, 2, 1, 3,4).contiguous()
+        data_input = data_input.view(-1, 1, *(data_input.size()[2:]))
+        data_input = tanh2sigmoid(data_input).unbind(0)
 
-        mean_image_loss = []
-        output_edges = []
-        target_edges = []
-        for batch_idx in range(len(targets)):
-            edges_o = []
-            edges_t = []
-            for frame_idx in range(targets[0].size(0)):
-                loss = self.edge_loss(
-                    outputs[batch_idx][frame_idx:frame_idx + 1],
-                    targets[batch_idx][frame_idx:frame_idx + 1]
-                )
-                mean_image_loss.append(loss)
+        model_output = model_output.permute(0, 2, 1, 3,4).contiguous()
+        model_output = model_output.view(-1, 1, *(model_output.size()[2:]))
+        model_output = tanh2sigmoid(model_output).unbind(0)
+
+        mean_image_loss = [self.edge_loss(output, target) for output, target in zip(model_output, data_input)]
 
         return torch.stack(mean_image_loss, dim=0).mean(dim=0)
 
