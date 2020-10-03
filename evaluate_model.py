@@ -98,7 +98,10 @@ def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
       if(G):
         view_list.append(tanh2sigmoid(pred_frames_G[i][0]))
       if(D):
-        view_list.append(pred_frames_D[i][0][0])
+        if(len(pred_frames_D)==1):
+          view_list.append(pred_frames_D[0][0][0])
+        else:
+          view_list.append(pred_frames_D[0][0][0])
       if(G):
         view_list.append(torch.abs(x_real_frames[i][0] - pred_frames_G[i][0]))
       view_img(view_list, heat_index=[3])

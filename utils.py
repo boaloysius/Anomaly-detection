@@ -47,7 +47,7 @@ def torch_log(x, eps=1e-12):
     return torch.log(torch.clamp(x, eps, 1.))
 
 
-def l2_BCE(y, t, eps=1e-12):
+def l2_BCE(t, y, eps=1e-12):
     return -(t*torch_log(y**2) + (1-t)*torch_log((1-y)**2)).mean()
 
 
@@ -143,7 +143,7 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
     import seaborn as sns
 
     fig, axs = plt.subplots(1, len(imgs))
-    fig.set_size_inches(20, 20)
+    fig.set_size_inches(15, 15)
     for i, img in enumerate(imgs):
       if(i in heat_index):
         sns.heatmap(img, vmin=0, vmax=1, cmap='gray', square=True, cbar=False)

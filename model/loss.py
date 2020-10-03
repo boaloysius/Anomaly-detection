@@ -54,4 +54,10 @@ def ssim_loss(x, target):
   ssim_loss = pytorch_ssim.SSIM(window_size = 11)
   mean_loss = [ssim_loss(img1, img2) for img1, img2 in zip(unbind1, unbind2)]
   mean_loss_tensor = torch.stack(mean_loss, dim=0).mean(dim=0)
-  return(mean_loss_tensor)
+  return(1-mean_loss_tensor)
+
+def torch_log(x, eps=1e-12):
+    return torch.log(torch.clamp(x, eps, 1.))
+
+def l2_BCE(y, t, eps=1e-12):
+    return -(t*torch_log(y**2) + (1-t)*torch_log((1-y)**2)).mean()
