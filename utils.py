@@ -143,7 +143,7 @@ def view_img(imgs, title=None, save_path=None, heat_index=[]):
     import seaborn as sns
 
     fig, axs = plt.subplots(1, len(imgs))
-    fig.set_size_inches(15, 15)
+    fig.set_size_inches(10, 10)
     for i, img in enumerate(imgs):
       if(i in heat_index):
         sns.heatmap(img, vmin=0, vmax=1, cmap='gray', square=True, cbar=False)
@@ -205,7 +205,20 @@ def denoising_epoch_print(x_real, x_noise, G=False,D=False):
       view_img(print_queue[:print_length])
       print_queue = print_queue[print_length:]
 
-def epoch_print(input_img, target,  G=False,D=False):
+def epoch_print(input_img, target, print_result, epoch, G=False, D=False):
+
+    print(print_result)
+
+    with open("../log.txt", "a") as fp:
+      fp.write(print_result+"\n")
+
+    if(epoch%10==9):
+      try:
+        store_model(G, D, drive=True)
+      except:
+        pass
+    else:
+      store_model(G, D, drive=False)
 
     print_queue=[
               tanh2sigmoid(torch.unbind(target, dim=2)[0][0])   
