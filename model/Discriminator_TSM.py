@@ -40,7 +40,6 @@ class Temporal_Discriminator_224_11(nn.Module):
         out = self.conv2(out)
         out = self.conv3(out)
         out = self.conv4(out)
-        out = self.interpolate(out,sf1=1/2)
 
         out = self.conv5(out)
         out = self.conv6(out)
