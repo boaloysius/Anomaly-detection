@@ -21,7 +21,7 @@ def eval_copy(video_name, kind="Test"):
 def eval_loader():
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
   size = 224
-  depth=10
+  depth=8
   dataset = dataset1.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
   loader = torch.utils.data.DataLoader(
       dataset, batch_size=1, shuffle=False, num_workers=1)
