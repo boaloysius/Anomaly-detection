@@ -6,6 +6,9 @@ import dataset1
 
 device = 'cpu'#'cuda' if torch.cuda.is_available() else 'cpu'
 
+import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
+ssim_metric = pytorch_ssim.ssim
+
 def eval_copy(video_name, kind="Test"):
   train_dir = "../data/UCSD_processed/UCSDped1/Train/"
   test_dir  = "../data/UCSD_processed/UCSDped1/Test/"
@@ -90,9 +93,9 @@ def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
     x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
     
     for i in range(num_frames):
-      #anomaly_count = (pred_frames_D[i] < threshold).sum()
-      #title = "{} : {} ".format(index*num_frames+i, anomaly_count)
-      #print(title)
+      anomaly_count = 1-ssim_metric(pred_frames_G[i],  x_real_frames[i])
+      title = "{} : {} ".format(index*num_frames+i, anomaly_count)
+      print(title)
 
       view_list = [tanh2sigmoid(x_real_frames[i][0])]
       if(G):
