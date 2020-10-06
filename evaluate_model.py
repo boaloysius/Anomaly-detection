@@ -9,17 +9,19 @@ device = 'cpu'#'cuda' if torch.cuda.is_available() else 'cpu'
 import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 ssim_metric = pytorch_ssim.ssim
 
-def eval_copy(video_name, kind="Test"):
+def eval_copy(video_names, kind="Test"):
   train_dir = "../data/UCSD_processed/UCSDped1/Train/"
   test_dir  = "../data/UCSD_processed/UCSDped1/Test/"
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
-  src = (train_dir if kind=="Train" else test_dir) + video_name
-  dst = eval_dir+video_name
-
   if os.path.exists(eval_dir) and os.path.isdir(eval_dir):
     shutil.rmtree(eval_dir)
-  shutil.copytree(src, dst)
-  os.listdir(eval_dir)
+  
+  for video_name in video_names:
+    src = (train_dir if kind=="Train" else test_dir) + video_name
+    dst = eval_dir+video_name
+    shutil.copytree(src, dst)
+  
+  print(os.listdir(eval_dir))
 
 def eval_loader():
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
