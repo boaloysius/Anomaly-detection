@@ -1,33 +1,40 @@
 import shutil
 import os
+import sys
 
 from utils import *
-import dataset1
+import eval_dataset
 
 device = 'cpu'#'cuda' if torch.cuda.is_available() else 'cpu'
 
 import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 ssim_metric = pytorch_ssim.ssim
 
-def eval_copy(video_names, kind="Test"):
+def eval_copy(video_names):
   train_dir = "../data/UCSD_processed/UCSDped1/Train/"
   test_dir  = "../data/UCSD_processed/UCSDped1/Test/"
+  gt_dir = "../data/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/"
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
+
   if os.path.exists(eval_dir) and os.path.isdir(eval_dir):
     shutil.rmtree(eval_dir)
   
   for video_name in video_names:
-    src = (train_dir if kind=="Train" else test_dir) + video_name
-    dst = eval_dir+video_name
+    src    = test_dir + video_name
+    src_gt = gt_dir + video_name+"_gt"
+    dst    = eval_dir+video_name
+    dst_gt = eval_dir+video_name+"_gt"
     shutil.copytree(src, dst)
+    shutil.copytree(src_gt, dst_gt)
   
   print(os.listdir(eval_dir))
+  sys.exit(0)
 
 def eval_loader():
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
   size = 224
   depth=8
-  dataset = dataset1.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
+  dataset = eval_dataset.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
   loader = torch.utils.data.DataLoader(
       dataset, batch_size=1, shuffle=False, num_workers=1)
   return loader
@@ -77,10 +84,10 @@ def evaluate_generator(model, video_name, kind="Test", threshold=None):
         torch.abs(x_real_frames[i][0] - pred_frames[i][0])[0]
         ], heat_index=[2])
 
-def evaluate_full_model(G, D, video_name, kind="Test", threshold=None):
+def evaluate_full_model(G, D, video_name, threshold=None):
   if(threshold==None):
     threshold=0.999
-  eval_copy(video_name, kind)
+  eval_copy(video_name)
   loader = eval_loader()
 
   for index, x_real in enumerate(loader):
