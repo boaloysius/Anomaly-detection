@@ -28,7 +28,7 @@ def eval_copy(video_names):
     shutil.copytree(src_gt, dst_gt)
   
   print(os.listdir(eval_dir))
-  sys.exit(0)
+
 
 def eval_loader():
   eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
@@ -39,50 +39,6 @@ def eval_loader():
       dataset, batch_size=1, shuffle=False, num_workers=1)
   return loader
 
-def evaluate_temporal_discriminator(model, video_name, kind="Test", threshold=None):
-  if(threshold==None):
-    threshold=0.999
-  eval_copy(video_name, kind)
-  loader = eval_loader()
-
-  for index, x_real in enumerate(loader):
-    num_frames = x_real.shape[2]
-    pred = model(x_real.to(device))
-    x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
-    #x_real_frames = [x.numpy() for x in x_real_frames]
-    pred_frames = pred.detach().to("cpu").unbind(dim=2)
-    #pred_frames = [f.numpy() for f in pred_frames]
-
-    for i in range(num_frames):
-      anomaly_count = (pred_frames[i] < threshold).sum()
-      title = "{} : {} ".format(index*num_frames+i, anomaly_count)
-      print(title)
-      view_img([tanh2sigmoid(x_real_frames[i][0]), pred_frames[i][0][0]], heat_index=[1])
-      #print(i)
-
-def evaluate_generator(model, video_name, kind="Test", threshold=None):
-  if(threshold==None):
-    threshold=0.999
-  eval_copy(video_name, kind)
-  loader = eval_loader()
-
-  for index, x_real in enumerate(loader):
-    num_frames = x_real.shape[2]
-    pred = model(x_real.to(device))
-    x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
-    #x_real_frames = [x.numpy() for x in x_real_frames]
-    pred_frames = pred.detach().to("cpu").unbind(dim=2)
-    #pred_frames = [f.numpy() for f in pred_frames]
-
-    for i in range(num_frames):
-      anomaly_count = (pred_frames[i] < threshold).sum()
-      title = "{} : {} ".format(index*num_frames+i, anomaly_count)
-      print(title)
-      view_img([
-        tanh2sigmoid(x_real_frames[i][0]), 
-        tanh2sigmoid(pred_frames[i][0]), 
-        torch.abs(x_real_frames[i][0] - pred_frames[i][0])[0]
-        ], heat_index=[2])
 
 def evaluate_full_model(G, D, video_name, threshold=None):
   if(threshold==None):
@@ -91,6 +47,9 @@ def evaluate_full_model(G, D, video_name, threshold=None):
   loader = eval_loader()
 
   for index, x_real in enumerate(loader):
+    print(x_real)
+    sys.exit(0)
+    
     num_frames = x_real.shape[2]
     if(G):
       pred_G = G(x_real.to(device))
