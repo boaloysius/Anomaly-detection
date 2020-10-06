@@ -58,12 +58,11 @@ class Dataset(torch.utils.data.Dataset):
           gt_img = np.array(Image.open(gt_path))
           gt_frames.append(gt_img)
           anomaly_indicators.append(int(gt_img.max()>0))
-          print(path,"\n", gt_path)
+          #print(path,"\n", gt_path)
 
         X = self.transform(img_list)
         
-        
-        return X,1
+        return X, anomaly_indicators
         
     def __len__(self):
         return self.total_setCount

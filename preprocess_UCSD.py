@@ -10,15 +10,16 @@ def preprocess_video(dirs):
             continue
         if _dir[-3:] == '_gt':
             continue           
+        
         new_dir = _dir.replace('UCSD_Anomaly_Dataset.v1p2', 'UCSD_processed')
         os.makedirs(new_dir, exist_ok=True)
         dir_files = sorted(glob.glob(_dir + '/*.tif'))
         print('{} >>> {}'.format(_dir, new_dir))
-        for t in range(1, len(dir_files)+1):
-            I_t = np.array(Image.open(dir_files[t]), dtype='float')
+        for file_ in dir_files:
+            I_t = np.array(Image.open(file_), dtype='float')
             I = np.stack([I_t, I_t, I_t], axis=0)
             img = Image.fromarray(I.transpose(1, 2, 0).astype(np.uint8))
-            save_path = os.path.join(new_dir, '{:03d}.png'.format(t))
+            save_path = file_.replace('UCSD_Anomaly_Dataset.v1p2', 'UCSD_processed').replace(".tif",".png")
             img.save(save_path)
             
             
