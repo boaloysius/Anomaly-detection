@@ -47,7 +47,7 @@ def evaluate_full_model(G, D, video_name, threshold=None):
   loader = eval_loader()
 
   for index, data in enumerate(loader):
-    x_real, target = data
+    x_real, target, _, _ = data
     
     num_frames = x_real.shape[2]
     if(G):
@@ -60,7 +60,7 @@ def evaluate_full_model(G, D, video_name, threshold=None):
     x_real_frames = x_real.detach().to("cpu").unbind(dim=2)
     
     for i in range(num_frames):
-      anomaly_count = 1-ssim_metric(pred_frames_G[i],  x_real_frames[i])
+      anomaly_count = 1-ssim_metric(tanh2sigmoid(pred_frames_G[i]),  tanh2sigmoid(x_real_frames[i]))
       title = "{} : {} : {} ".format(index*num_frames+i, anomaly_count, target[i])
       print(title)
 
