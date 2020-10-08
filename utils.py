@@ -9,6 +9,7 @@ from PIL import Image
 import shutil
 import os
 import sys
+import cv2
 
 def convert_tensor_to_PIL(tensor, out_size=None):
     out = transforms.ToPILImage()(tensor.cpu())
@@ -240,3 +241,30 @@ def epoch_print(input_img, target, print_result, epoch, G=False, D=False):
       view_img(print_queue[:print_length])
       print_queue = print_queue[print_length:]
 
+def get_video_eval_frames(original, mask, predicted, text=None):
+    original = Image.fromarray(original)
+    mask = Image.fromarray(mask)
+    original_masked = Image.blend(original,mask, alpha=0.5)
+    np_original = np.array(original)
+    np_predicted = np.array(predicted)
+    np_original_masked = np.array(original_masked)
+    
+    if(text):
+        font = cv2.FONT_HERSHEY_SIMPLEX 
+        cv2.putText(np_original,  
+                    str(text),  
+                    (15, 15),  
+                    font, 0.5,  
+                    (0, 255, 255),  
+                    1,  
+                    cv2.LINE_4)
+
+    final_image = np.concatenate((np_original, np_original_masked, np_predicted), axis=1)
+    return final_image
+
+def write_video(frame_list, video_name="output.mp4"):
+    video_name = "/content/"+video_name
+    writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
+    for frame in frame_list:
+        writer.write(frame.astype('uint8'))
+    writer.release()

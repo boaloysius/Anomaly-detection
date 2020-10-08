@@ -20,6 +20,7 @@ class Dataset(torch.utils.data.Dataset):
         self.cum_setCount = np.cumsum(setCount)
         self.min_indices = np.concatenate(([0],self.cum_setCount[:-1]))
 
+        self.resize_size = resize_size
         self.transform = self._make_transforms(resize_size, resize_mode)
         self.rgb = rgb
         self.depth = depth
@@ -55,14 +56,14 @@ class Dataset(torch.utils.data.Dataset):
           tmp_gt_path_split = tmp_gt_path.split("/")
           tmp_gt_path_split[-2] = tmp_gt_path_split[-2]+"_gt"
           gt_path =  ("/".join(tmp_gt_path_split)).replace(".png",".bmp")
-          gt_img = np.array(Image.open(gt_path))
+          gt_img = np.array(Image.open(gt_path).convert("RGB").resize((224,224)))
           gt_frames.append(gt_img)
           anomaly_indicators.append(int(gt_img.max()>0))
           #print(path,"\n", gt_path)
 
         X = self.transform(img_list)
         
-        return X, anomaly_indicators
+        return X, anomaly_indicators, gt_frames
         
     def __len__(self):
         return self.total_setCount
