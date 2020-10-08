@@ -248,15 +248,31 @@ def get_video_eval_frames(original, mask, predicted, text=None):
     np_original = np.array(original)
     np_predicted = np.array(predicted)
     np_original_masked = np.array(original_masked)
-    
+
     if(text):
         font = cv2.FONT_HERSHEY_SIMPLEX 
         cv2.putText(np_original,  
-                    str(text),  
-                    (15, 15),  
-                    font, 0.5,  
-                    (0, 255, 255),  
-                    1,  
+                    str(text["file"]),  
+                    (15, 15), font, 0.5, (0, 255, 255), 1,  
+                    cv2.LINE_4)
+
+        #cv2.putText(np_original,  
+        #            "Original",  
+        #            (15, 40), font, 0.5, (0, 255, 255), 1,  
+        #            cv2.LINE_4)
+
+        cv2.putText(np_original_masked,  
+                    "Masked", 
+                    (15, 20), font, 0.5, (0, 255, 255), 1,  
+                    cv2.LINE_4)
+
+        #cv2.putText(np_predicted,  
+        #            "Predicted", 
+        #            (15, 20), font, 0.5, (0, 255, 255), 1,  
+        #            cv2.LINE_4)
+        cv2.putText(np_original_masked,  
+                    "Anomaly:{}".format(text["anomaly_score"]), 
+                    (15, 35), font, 0.5, (0, 255, 255), 1,  
                     cv2.LINE_4)
 
     final_image = np.concatenate((np_original, np_original_masked, np_predicted), axis=1)

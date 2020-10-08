@@ -40,6 +40,7 @@ class Dataset(torch.utils.data.Dataset):
         img_list = []
         anomaly_indicators = []
         gt_frames = []
+        file_names = []
         for i in range(index, index+self.depth):
           path = whole_video[i]
           #print(path)
@@ -59,11 +60,12 @@ class Dataset(torch.utils.data.Dataset):
           gt_img = np.array(Image.open(gt_path).convert("RGB").resize((224,224)))
           gt_frames.append(gt_img)
           anomaly_indicators.append(int(gt_img.max()>0))
+          file_names.append("/".join(path.split("/")[-2:]))
           #print(path,"\n", gt_path)
 
         X = self.transform(img_list)
         
-        return X, anomaly_indicators, gt_frames
+        return X, anomaly_indicators, gt_frames, file_names
         
     def __len__(self):
         return self.total_setCount
