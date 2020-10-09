@@ -278,6 +278,20 @@ def get_video_eval_frames(original, mask, predicted, text=None):
     final_image = np.concatenate((np_original, np_original_masked, np_predicted), axis=1)
     return final_image
 
+
+def get_video_train_frames(original, predicted, text=None):
+    if(text):
+        font = cv2.FONT_HERSHEY_SIMPLEX 
+        cv2.putText(original,  
+                    str(text),  
+                    (15, 15), font, 0.5, (0, 255, 255), 1,  
+                    cv2.LINE_4)
+
+    final_image = np.concatenate((original, predicted), axis=1)
+    return final_image
+
+
+
 def write_video(frame_list, video_name="output.mp4"):
     video_name = "/content/"+video_name
     writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
