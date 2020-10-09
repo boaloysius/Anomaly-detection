@@ -94,5 +94,5 @@ def evaluate_model(G, name="eval", drive=False):
   for _,row in eval_df.iterrows():
     eval_video_frames.append(combine_eval_frame(row, auc_scores["ssim_score"]))
 
-  write_video(eval_video_frames,"{}.mp4".format(name), drive)
+  write_video(eval_video_frames,"{}_{}.mp4".format(name, auc_scores["ssim_score"]), drive)
   return auc_scores["ssim_score"]
