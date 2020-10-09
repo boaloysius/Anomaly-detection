@@ -295,12 +295,18 @@ def get_video_train_frames(original, predicted, text=None):
 
 
 
-def write_video(frame_list, video_name="output.mp4"):
-    video_name = "/content/"+video_name
-    writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
-    for frame in frame_list:
-        writer.write(frame.astype('uint8'))
-    writer.release()
+def write_video(frame_list, video_name="output.mp4", drive=False):
+    video_names = ["/content/"+video_name]
+    if(drive):
+      video_names.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/videos/"+video_name)
+    
+    for video_name in video_names:
+      writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
+      for frame in frame_list:
+          writer.write(frame.astype('uint8'))
+      writer.release()
+
+
 
 def combine_eval_frame(row, auc=None):
   score_map = [key for key in row.keys() if "_nor" in key]
