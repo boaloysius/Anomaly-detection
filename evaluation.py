@@ -48,7 +48,7 @@ def get_eval_df(loader, G):
   G.to(device)
   with torch.no_grad():
     for index, data in enumerate(loader):
-      if(index%50==0):
+      if(index%100==0):
         print(index)
       x_real, target, gt, file_names = data
 
