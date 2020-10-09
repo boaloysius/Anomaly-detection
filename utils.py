@@ -256,24 +256,27 @@ def get_video_eval_frames(original, mask, predicted, text=None):
                     (15, 15), font, 0.5, (0, 255, 255), 1,  
                     cv2.LINE_4)
 
-        #cv2.putText(np_original,  
-        #            "Original",  
-        #            (15, 40), font, 0.5, (0, 255, 255), 1,  
-        #            cv2.LINE_4)
+        cv2.putText(np_original,  
+                    "Original",  
+                    (15, 40), font, 0.5, (0, 255, 255), 1,  
+                    cv2.LINE_4)
 
         cv2.putText(np_original_masked,  
                     "Masked", 
                     (15, 20), font, 0.5, (0, 255, 255), 1,  
                     cv2.LINE_4)
 
-        #cv2.putText(np_predicted,  
-        #            "Predicted", 
-        #            (15, 20), font, 0.5, (0, 255, 255), 1,  
-        #            cv2.LINE_4)
+        
         cv2.putText(np_original_masked,  
-                    "Anomaly:{}".format(text["anomaly_score"]), 
-                    (15, 35), font, 0.5, (0, 255, 255), 1,  
+                    "{}".format(text["anomaly_score"]), 
+                    (15, 35), font, 0.3, (0, 255, 255), 1,  
                     cv2.LINE_4)
+
+        if(text["auc"]):
+          cv2.putText(np_original_masked,  
+                      "AUC: {}".format(np.round(text["auc"], 2)), 
+                      (15, 60), font, 0.4, (0, 255, 255), 1,  
+                      cv2.LINE_4)
 
     final_image = np.concatenate((np_original, np_original_masked, np_predicted), axis=1)
     return final_image
@@ -298,3 +301,16 @@ def write_video(frame_list, video_name="output.mp4"):
     for frame in frame_list:
         writer.write(frame.astype('uint8'))
     writer.release()
+
+def combine_eval_frame(row, auc=None):
+  score_map = [key for key in row.keys() if "_nor" in key]
+  combined =  get_video_eval_frames(
+        row["x_real"],
+        row["x_mask"],
+        row["x_pred"],
+        text = {
+            "file": row["file_name"],
+            "anomaly_score": ", ".join([key.split("_")[0]+":"+str(np.round(row[key],2)) for key in score_map]),
+            "auc":auc
+        })
+  return combined
