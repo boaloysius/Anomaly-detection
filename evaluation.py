@@ -82,7 +82,7 @@ def get_eval_df(loader, G):
 
   return eval_df
 
-def evaluate_model(G, epoch=0):
+def evaluate_model(G, name="eval"):
   loader = get_eval_loader()
   eval_df = get_eval_df(loader, G)
   from sklearn.metrics import roc_auc_score
@@ -94,5 +94,5 @@ def evaluate_model(G, epoch=0):
   for _,row in eval_df.iterrows():
     eval_video_frames.append(combine_eval_frame(row, auc_scores["ssim_score"]))
 
-  write_video(eval_video_frames,"eval_{}.mp4".format(epoch))
+  write_video(eval_video_frames,"{}.mp4".format(name))
   return auc_scores["ssim_score"]
