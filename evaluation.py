@@ -35,11 +35,15 @@ score_map = {"ssim_score":get_ssim_skimage,
              "psnr_score":get_psnr_skimage
              }
 
-def get_eval_loader():
-  eval_folders=["Test003", "Test014", "Test018", "Test019", "Test021", "Test022", "Test023", "Test024", "Test032"]
+def get_eval_loader(dataset_name="UCSDpred1"):
+  if(dataset_name=="UCSDpred1"):
+    eval_folders=["Test003", "Test014", "Test018", "Test019", "Test021", "Test022", "Test023", "Test024", "Test032"]
+  if(dataset_name=="UCSDpred2"):
+    eval_folders=["Test001", "Test002", "Test018", "Test003", "Test004", "Test005", "Test006", "Test007", "Test008", "Test009", "Test010", "Test011", "Test012"]
+  
   selected = eval_folders
-  eval_copy(selected)
-  loader = eval_loader()
+  eval_copy(selected, dataset_name)
+  loader = eval_loader(dataset_name)
   return loader
 
 def get_eval_df(loader, G):
@@ -82,8 +86,8 @@ def get_eval_df(loader, G):
 
   return eval_df
 
-def evaluate_model(G, name="eval", drive=False):
-  loader = get_eval_loader()
+def evaluate_model(G, name="eval", drive=False, dataset_name="UCSDpred1"):
+  loader = get_eval_loader(dataset_name)
   eval_df = get_eval_df(loader, G)
   from sklearn.metrics import roc_auc_score
   auc_scores = {}

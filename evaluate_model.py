@@ -10,11 +10,11 @@ device = 'cpu'#'cuda' if torch.cuda.is_available() else 'cpu'
 import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 ssim_metric = pytorch_ssim.ssim
 
-def eval_copy(video_names):
-  train_dir = "../data/UCSD_processed/UCSDped1/Train/"
-  test_dir  = "../data/UCSD_processed/UCSDped1/Test/"
-  gt_dir = "../data/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/"
-  eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
+def eval_copy(video_names, dataset_name="UCSDped1"):
+  train_dir = "../data/UCSD_processed/{}/Train/".format(dataset_name)
+  test_dir  = "../data/UCSD_processed/{}/Test/".format(dataset_name)
+  gt_dir = "../data/UCSD_Anomaly_Dataset.v1p2/{}/Test/".format(dataset_name)
+  eval_dir  = "../data/UCSD_processed/{}/Evaluate/".format(dataset_name)
 
   if os.path.exists(eval_dir) and os.path.isdir(eval_dir):
     shutil.rmtree(eval_dir)
@@ -30,8 +30,8 @@ def eval_copy(video_names):
   print(os.listdir(eval_dir))
 
 
-def eval_loader():
-  eval_dir  = "../data/UCSD_processed/UCSDped1/Evaluate/"
+def eval_loader(dataset_name="UCSDped1"):
+  eval_dir  = "../data/UCSD_processed/{}/Evaluate/".format(dataset_name)
   size = 224
   depth=8
   dataset = eval_dataset.Dataset(eval_dir, (size, size), rgb=True, depth=depth)
