@@ -302,8 +302,8 @@ def write_video(frame_list, video_name="output.mp4", drive=False):
       file_path = base_path + video_name
       folder_path = "/".join(file_path.split("/")[:-1])
       
-      try: shutil.rmtree(folder_path)
-      except: pass
+      #try: shutil.rmtree(folder_path)
+      #except: pass
       os.makedirs(folder_path, exist_ok=True)    
     
       writer = cv2.VideoWriter(file_path, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
