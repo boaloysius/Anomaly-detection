@@ -11,6 +11,8 @@ import libs.pytorch_ssim.pytorch_ssim as pytorch_ssim
 ssim_metric = pytorch_ssim.ssim
 
 def eval_copy(video_names, dataset_name="UCSDped1"):
+  #print(dataset_name)
+  #print(video_names)
   train_dir = "../data/UCSD_processed/{}/Train/".format(dataset_name)
   test_dir  = "../data/UCSD_processed/{}/Test/".format(dataset_name)
   gt_dir = "../data/UCSD_Anomaly_Dataset.v1p2/{}/Test/".format(dataset_name)

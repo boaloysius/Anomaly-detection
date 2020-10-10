@@ -57,7 +57,13 @@ class Dataset(torch.utils.data.Dataset):
           tmp_gt_path_split = tmp_gt_path.split("/")
           tmp_gt_path_split[-2] = tmp_gt_path_split[-2]+"_gt"
           gt_path =  ("/".join(tmp_gt_path_split)).replace(".png",".bmp")
-          gt_img = np.array(Image.open(gt_path).convert("RGB").resize((224,224)))
+          try:
+            gt_img = np.array(Image.open(gt_path).convert("RGB").resize((224,224)))
+          except:
+            tmp_gt_path_split[-1] = "frame"+tmp_gt_path_split[-1]
+            gt_path =  ("/".join(tmp_gt_path_split)).replace(".png",".bmp")
+            gt_img = np.array(Image.open(gt_path).convert("RGB").resize((224,224)))
+
           gt_frames.append(gt_img)
           anomaly_indicators.append(int(gt_img.max()>0))
           file_names.append("/".join(path.split("/")[-2:]))
