@@ -167,14 +167,13 @@ def store_model(G=False,D=False, folder_name=1, drive=True):
     folder_name = str(folder_name)
     base_paths = ["/content/model_outputs/"]
     if(drive):
-      base_paths.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/models/")
+      base_paths.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/")
     
     for base_path in base_paths:
-      os.makedirs(base_path, exist_ok=True)
       model_path = base_path + folder_name + "/"
       try: shutil.rmtree(model_path)
       except: pass
-      os.mkdir(model_path)
+      os.makedirs(model_path, exist_ok=True)
       if(G):
         torch.save(G.state_dict(), model_path+"G.pth")
       if(D):
@@ -296,12 +295,18 @@ def get_video_train_frames(original, predicted, text=None):
 
 
 def write_video(frame_list, video_name="output.mp4", drive=False):
-    video_names = ["/content/"+video_name]
-    if(drive):
-      video_names.append("/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/videos/"+video_name)
+    base_paths = ["/content/model_outputs/",
+                  "/content/gdrive/My Drive/Colab Notebooks/LJMU/Custom Code/"]
+
+    for base_path in base_paths:
+      file_path = base_path + video_name
+      folder_path = "/".join(file_path.split("/")[:-1])
+      
+      try: shutil.rmtree(folder_path)
+      except: pass
+      os.makedirs(folder_path, exist_ok=True)    
     
-    for video_name in video_names:
-      writer = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
+      writer = cv2.VideoWriter(file_path, cv2.VideoWriter_fourcc(*"XVID"), 10,(frame_list[0].shape[1],frame_list[0].shape[0]))
       for frame in frame_list:
           writer.write(frame.astype('uint8'))
       writer.release()
