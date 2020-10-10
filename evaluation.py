@@ -23,7 +23,7 @@ def get_psnr_skimage(pred_frame, x_real_frame):
               tanh2sigmoid(pred_frame.permute(1,2,0)).numpy(),  
               tanh2sigmoid(x_real_frame.permute(1,2,0)).numpy(),
               )
-  return psnr
+  return 1-psnr
 
 def image_denormalise(x):
   return ((x.permute(1,2,0)*0.5+0.5)*255)
@@ -93,11 +93,11 @@ def evaluate_model(G, name="eval", drive=False, dataset_name="UCSDped1"):
   from sklearn.metrics import roc_auc_score
   auc_scores = {}
   for key in score_map:
-    auc_scores[key]=roc_auc_score(eval_df["target"], eval_df[key+"_nor"])
+    auc_scores[key]=np.round(roc_auc_score(eval_df["target"], eval_df[key+"_nor"]), 2)
 
   eval_video_frames = []
   for _,row in eval_df.iterrows():
-    eval_video_frames.append(combine_eval_frame(row, auc_scores["ssim_score"]))
+    eval_video_frames.append(combine_eval_frame(row, "AUC:{},{}".format(auc_scores["ssim_score"], auc_scores["psnr_score"])))
 
   write_video(eval_video_frames,"{}_{}.mp4".format(name, auc_scores["ssim_score"]), drive)
-  return auc_scores["ssim_score"]
+  return auc_scores

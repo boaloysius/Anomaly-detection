@@ -271,9 +271,9 @@ def get_video_eval_frames(original, mask, predicted, text=None):
                     (15, 35), font, 0.3, (0, 255, 255), 1,  
                     cv2.LINE_4)
 
-        if(text["auc"]):
+        if(text["note"]):
           cv2.putText(np_original_masked,  
-                      "AUC: {}".format(np.round(text["auc"], 2)), 
+                      text["note"], 
                       (15, 60), font, 0.4, (0, 255, 255), 1,  
                       cv2.LINE_4)
 
@@ -313,7 +313,7 @@ def write_video(frame_list, video_name="output.mp4", drive=False):
 
 
 
-def combine_eval_frame(row, auc=None):
+def combine_eval_frame(row, note=None):
   score_map = [key for key in row.keys() if "_nor" in key]
   combined =  get_video_eval_frames(
         row["x_real"],
@@ -322,6 +322,6 @@ def combine_eval_frame(row, auc=None):
         text = {
             "file": row["file_name"],
             "anomaly_score": ", ".join([key.split("_")[0]+":"+str(np.round(row[key],2)) for key in score_map]),
-            "auc":auc
+            "note":note
         })
   return combined
