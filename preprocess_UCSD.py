@@ -25,11 +25,11 @@ def preprocess_video(dirs):
             
 if __name__ == '__main__':
     ped1_train_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Train/*'))
-    #ped2_train_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped2/Train/*'))
+    ped2_train_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped2/Train/*'))
     ped1_test_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped1/Test/*'))
-    #ped2_test_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped2/Test/*'))
+    ped2_test_dirs = sorted(glob.glob('../data/UCSD_Anomaly_Dataset.v1p2/UCSDped2/Test/*'))
 
     preprocess_video(ped1_train_dirs)
-    #preprocess_video(ped2_train_dirs)
+    preprocess_video(ped2_train_dirs)
     preprocess_video(ped1_test_dirs)
-    #preprocess_video(ped2_test_dirs)
+    preprocess_video(ped2_test_dirs)
