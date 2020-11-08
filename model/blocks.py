@@ -5,13 +5,10 @@ import torch.nn.functional as F
 
 class NN3Dby2D(nn.Module):
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation= nn.LeakyReLU(0.1), bn=True, upsample=False):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation= nn.LeakyReLU(0.1), bn=True):
         super().__init__()
 
-        if(upsample):
-          self.layer = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding)
-        else:
-          self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
+        self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
         #self.layer = nn.utils.spectral_norm(self.layer)
         
         self.bn = nn.BatchNorm2d(out_channels, affine=False) if bn else False        
