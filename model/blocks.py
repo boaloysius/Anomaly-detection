@@ -43,8 +43,8 @@ class NN3Dby2DTSM(nn.Module):
         LGTSM_kargs = {
             "shift_ratio": 0.5,
             "shift_groups": 2,
-            "shift_width": 3,
-            "fixed": False
+            "shift_width": 1,
+            "fixed": True
             }
 
         self.learnableTSM = LearnableTSM(**LGTSM_kargs)
