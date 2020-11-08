@@ -35,7 +35,7 @@ class NN3Dby2DTSM(nn.Module):
         super().__init__()
 
         self.layer = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
-        self.layer = nn.utils.spectral_norm(self.layer)
+        self.bn = nn.BatchNorm2d(out_channels, affine=False) if bn else False 
         self.activation = activation
 
         from model.tsm_utils import LearnableTSM
@@ -50,26 +50,6 @@ class NN3Dby2DTSM(nn.Module):
         self.learnableTSM = LearnableTSM(**LGTSM_kargs)
 
     def forward(self, xs):
-        B, C, L, H, W = xs.shape
-
-        # Learnable temporal shift (via 3x1x1 conv)
-        xs_tsm = self.learnableTSM(xs).transpose(1, 2).contiguous()
-
-        out = self.layer(xs_tsm.view(B * L, C, H, W))
-        _, C_, H_, W_ = out.shape
-        return out.view(B, L, C_, H_, W_).transpose(1, 2)
-
-
-
-class NN3Dby2DTSMDeconv(NN3Dby2DTSM):
-    def __init__(
-        self, in_channels, out_channels, kernel_size, stride=1, padding=0, activation=nn.LeakyReLU(0.2, inplace=True), scale_factor=2
-    ):
-        super().__init__(in_channels, out_channels, kernel_size, stride, padding, activation)
-        self.scale_factor = scale_factor
-
-    def forward(self, xs):
-        xs = F.interpolate(xs, scale_factor=(1, self.scale_factor, self.scale_factor))
         B, C, L, H, W = xs.shape
 
         # Learnable temporal shift (via 3x1x1 conv)
