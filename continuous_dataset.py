@@ -6,6 +6,7 @@ import sys
 import numpy as np
 import glob
 import bisect
+#new
 
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, path, resize_size=None, resize_mode=Image.BILINEAR, rgb=False, depth=5):
