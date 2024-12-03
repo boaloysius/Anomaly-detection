@@ -1,20 +1,42 @@
-# DENOISING AUTOENCODER WITH TEMPORAL SHIFT MODULE FOR VIDEO ANOMALY DETECTION
 
-- Video anomaly detection studies predominantly rely on 3D CNNs and convolutional LSTMs, serving as primary deep learning architectures for capturing novel spatial and temporal events within video streams.
+# Denoising Autoencoder with Temporal Shift Module for Video Anomaly Detection
 
-- Despite their effectiveness, training and deploying these models pose challenges due to the high computational complexity they demand.
+This repository contains the implementation of the **Denoising Autoencoder with Temporal Shift Module (TSM-DAE)**, a novel approach for video anomaly detection. The project is based on the thesis submitted to Liverpool John Moores University for the degree of **Master of Science in Machine Learning and AI**.
 
-- A novel approach employs the Temporal Shift Module (TSM), facilitating the sharing of data between frames. This module, integrated with 2D convolution layers, accomplishes pseudo-3D convolutions for tasks like action recognition and video inpainting.
+## Abstract
 
-- The TSM module is notably efficient in learning spatial and temporal data, boasting over a 3% latency increase without introducing additional computational demands compared to 2D convolution layers.
+Video anomaly detection often requires computationally intensive models like 3D CNNs and convolutional LSTMs. This project proposes a more efficient alternative, combining **Temporal Shift Module (TSM)** with denoising autoencoders to capture long-term temporal information in surveillance videos. The proposed model, TSM-DAE, is evaluated against a base model (2DConv-DAE) and state-of-the-art methods using the UCSDped1 and UCSDped2 datasets.
 
-- This research introduces the utilization of the TSM module to acquire long-term temporal information within denoising-based deep learning models (TSM-DAE) designed for anomaly detection.
+## Features
 
-- In assessing the enhancement in model performance, a base model (2DConv-DAE), replicating image denoising autoencoders, is implemented with an identical count of learnable parameters as TSM-DAE.
+- **TSM Integration**: Efficient pseudo-3D convolution using 2D CNNs and TSM for temporal learning.
+- **Denoising Autoencoder**: Removes anomalies by replacing them with normal patterns.
+- **Dataset Support**: Preprocessed UCSDped1 and UCSDped2 datasets for training and evaluation.
+- **Performance Metrics**: Comparison using PSNR, SSIM, and AUC.
 
-- When trained and evaluated with UCSDped1 and UCSDped2 datasets, TSM-DAE outperforms the base model, achieving AUC improvements of 4% and 2% respectively.
+## Requirements
 
-- In a comparison against state-of-the-art models from existing literature, TSM-DAE surpasses LSTM-based convolutional models but falls short of the performance demonstrated by 3D convolutional models
+- Python 3.8+
+- PyTorch 1.10+
+- CUDA Toolkit (for GPU acceleration)
+- Required libraries listed in `requirements.txt`
+
+## Results
+
+- **UCSDped1**: TSM-DAE achieves a 4% improvement in AUC compared to the base model.
+- **UCSDped2**: TSM-DAE achieves a 2% improvement in AUC.
+- **Comparison with Literature**: Outperforms LSTM-based convolutional models but trails 3D CNN-based methods.
+
+## References
+
+- Sabokrou et al. (2019). "Learning to Denoise for Anomaly Detection in Surveillance Videos."
+- Lin et al. (2019). "TSM: Temporal Shift Module for Efficient Video Understanding."
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Important links
 
 - [Dataset](http://www.svcl.ucsd.edu/projects/anomaly/dataset.htm)
 
